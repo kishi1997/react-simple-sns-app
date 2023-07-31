@@ -1,13 +1,16 @@
 'use client'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import styles from '../styles/register.module.css'
-import { useRecoilState } from 'recoil';
-import { formDataState } from '../atom/state/formDataState';
 import axios from 'axios';
+import {formData} from '../types/types';
 
 const Register = () => {
     const [error, setError] = useState("");
-    const [formData, setFormData] = useRecoilState(formDataState);
+    const [formData, setFormData] = useState<formData>({
+        name: "",
+        email: "",
+        password: "",
+    });
     const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
