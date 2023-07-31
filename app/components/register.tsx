@@ -31,7 +31,6 @@ const Register = () => {
                 const data = res.data;
                 console.log(data);
             } catch (error) { 
-                // エラーハンドリング
                 if (axios.isAxiosError(error)) {
                   // エラーレスポンスがある場合
                   setError(error.response?.data?.message || 'Undifined error');
@@ -42,15 +41,6 @@ const Register = () => {
                   console.log(error);
                 }
               }
-            // DB内に登録されたdata取り出し
-            // const data = await res.json();
-            // if (data) {
-            //     console.log(data);
-            // }
-            // else {
-            //     setError(data.message);
-            //     console.log(error);
-            // }
         }
     }
     // 入力されたデータをformDataに格納
@@ -61,7 +51,7 @@ const Register = () => {
         setFormData({ ...formData, [name]: value });
         //[]で囲う理由
         //nameが"email"の場合は、[name]: valueはemail: valueとなり、
-        //formDataオブジェクトのemailプロパティが更新される。
+        //formDataオブジェクトのemailプロパティが更新されるから。
     }
 
     return (
