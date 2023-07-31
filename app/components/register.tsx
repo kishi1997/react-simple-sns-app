@@ -3,26 +3,21 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import styles from '../styles/register.module.css'
 import { useRecoilState } from 'recoil';
 import { formDataState } from '../atom/state/formDataState';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 const Register = () => {
-    // エラーメッセージの状態管理
     const [error, setError] = useState("");
-    // フォームデータの状態管理
     const [formData, setFormData] = useRecoilState(formDataState);
-    // アカウント登録のエンドポイントを取得
-    const endPoint = process.env.NEXT_PUBLIC_CREATE_ACCOUNT_URL;
-    // 登録処理
+    const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // エンドポイントが.envにちゃんとある場合に、処理を行う
-        if (!endPoint) {
-            console.log("CREATE_ACCOUNT_URL is not defined in .env");
+        if (!createAccountUrl) {
+            console.log("createAccountUrl is not defined");
             return;
         }
         try {
-            const res = await axios.post(endPoint, {
-                // postmanでやったやり方と同じ
+            const res = await axios.post(createAccountUrl, {
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
@@ -32,28 +27,19 @@ const Register = () => {
                 },
             });
             const data = res.data;
-            console.log(data);
-        } catch (error) { 
+        } catch (error) {
             if (axios.isAxiosError(error)) {
-                // エラーレスポンスがある場合
                 setError(error.response?.data?.message || 'Undifined error');
                 console.log(error);
             } else {
-                // エラーレスポンスがない場合
                 setError('Undifined error');
                 console.log(error);
             }
             }
     }
-    // 入力されたデータをformDataに格納
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        // 入力されているinputのname、valueを取り出す
         const { name, value } = e.currentTarget;
-        // setFormDataにセット
         setFormData({ ...formData, [name]: value });
-        //[]で囲う理由
-        //nameが"email"の場合は、[name]: valueはemail: valueとなり、
-        //formDataオブジェクトのemailプロパティが更新されるから。
     }
 
     return (
