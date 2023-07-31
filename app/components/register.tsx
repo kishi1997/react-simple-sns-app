@@ -3,6 +3,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import styles from '../styles/register.module.css'
 import { useRecoilState } from 'recoil';
 import { formDataState } from '../atom/state/formDataState';
+import axios, { AxiosError } from 'axios';
 
 const Register = () => {
     // エラーメッセージの状態管理
@@ -10,35 +11,46 @@ const Register = () => {
     // フォームデータの状態管理
     const [formData, setFormData] = useRecoilState(formDataState);
     // アカウント登録のエンドポイントを取得
-    const endPoint = process.env.CREATE_ACCOUNT_URL;
-    console.log(endPoint);
+    const endPoint = process.env.NEXT_PUBLIC_CREATE_ACCOUNT_URL;
     // 登録処理
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // エンドポイントが.envにちゃんとある場合に、処理を行う
         if (endPoint) {
-            const res = await fetch(endPoint, {
-                // postmanでやったやり方と同じ
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                // JSON.stringifyでjsonデータに変換
-                body: JSON.stringify({
+            try {
+                const res = await axios.post(endPoint, {
+                    // postmanでやったやり方と同じ
                     name: formData.name,
                     email: formData.email,
                     password: formData.password,
-                })
-            });
-            // DB内に登録されたdata取り出し
-            const data = await res.json();
-            if (data) {
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+                const data = res.data;
                 console.log(data);
-            }
-            else {
-                setError(data.message);
-                console.log(error);
-            }
+            } catch (error) { 
+                // エラーハンドリング
+                if (axios.isAxiosError(error)) {
+                  // エラーレスポンスがある場合
+                  setError(error.response?.data?.message || 'Undifined error');
+                  console.log(error);
+                } else {
+                  // エラーレスポンスがない場合
+                  setError('Undifined error');
+                  console.log(error);
+                }
+              }
+            // DB内に登録されたdata取り出し
+            // const data = await res.json();
+            // if (data) {
+            //     console.log(data);
+            // }
+            // else {
+            //     setError(data.message);
+            //     console.log(error);
+            // }
         }
     }
     // 入力されたデータをformDataに格納
