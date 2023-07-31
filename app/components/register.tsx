@@ -29,7 +29,6 @@ const Register = () => {
                     "Content-Type": "application/json",
                 },
             });
-            const data = res.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setError(error.response?.data?.message || 'Undifined error');
