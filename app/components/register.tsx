@@ -16,32 +16,34 @@ const Register = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // エンドポイントが.envにちゃんとある場合に、処理を行う
-        if (endPoint) {
-            try {
-                const res = await axios.post(endPoint, {
-                    // postmanでやったやり方と同じ
-                    name: formData.name,
-                    email: formData.email,
-                    password: formData.password,
-                }, {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-                const data = res.data;
-                console.log(data);
-            } catch (error) { 
-                if (axios.isAxiosError(error)) {
-                  // エラーレスポンスがある場合
-                  setError(error.response?.data?.message || 'Undifined error');
-                  console.log(error);
-                } else {
-                  // エラーレスポンスがない場合
-                  setError('Undifined error');
-                  console.log(error);
-                }
-              }
+        if (!endPoint) {
+            console.log("CREATE_ACCOUNT_URL is not defined in .env");
+            return;
         }
+        try {
+            const res = await axios.post(endPoint, {
+                // postmanでやったやり方と同じ
+                name: formData.name,
+                email: formData.email,
+                password: formData.password,
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = res.data;
+            console.log(data);
+        } catch (error) { 
+            if (axios.isAxiosError(error)) {
+                // エラーレスポンスがある場合
+                setError(error.response?.data?.message || 'Undifined error');
+                console.log(error);
+            } else {
+                // エラーレスポンスがない場合
+                setError('Undifined error');
+                console.log(error);
+            }
+            }
     }
     // 入力されたデータをformDataに格納
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
