@@ -1,6 +1,10 @@
 // 登録情報の型
-export type formData = {
-    name: string;
-    email: string;
-    password: string;
+export type UserData = {
+    user: {
+        "id": 0,
+        "name": "string",
+        "email": "string",
+        "iconImageUrl": "string"
+    },
+    token: "string"
 }
