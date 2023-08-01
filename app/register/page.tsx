@@ -8,23 +8,29 @@ import { userDataState } from '../atom/state/userDataState';
 
 const Register = () => {
     const router = useRouter();
-
     const [error, setError] = useState("");
-
     const [name, setName] = useState<string>("");
-    const [isNameValid, setIsNameValid] = useState<boolean>(false);
-
     const [email, setEmail] = useState<string>("");
-    const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
-
     const [password, setPassword] = useState<string>("");
-    const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-
     const [userData, setUserData] = useRecoilState(userDataState);
-
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
-
     const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
+
+    const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setName(e.target.value);
+    }
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+    };
+
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+    }
+
+    const validateEmail = (email:string): boolean => {
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailPattern.test(email);
+    }
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -46,8 +52,6 @@ const Register = () => {
             setUserData(data);
             if(res.status === 200) {
                 router.push('/');
-            } else {
-                alert(error);
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -60,26 +64,12 @@ const Register = () => {
         }
     }
 
-    const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value);
-        setIsNameValid(e.target.value.length > 0);
-    }
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        setIsEmailValid(e.target.value != '' && emailPattern.test(e.target.value));
-    };
+    const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
 
-    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-        setIsPasswordValid(e.target.value.length >= 8);
-    }
 
     const handleCloseErrorDialog = () => {
         setErrorDialogOpen(false);
     }
-
-    const isFormValid = isNameValid && isPasswordValid && isEmailValid;
 
     return (
         <div className={styles.container}>
@@ -103,7 +93,9 @@ const Register = () => {
                         <input onChange={handlePasswordChange} value={password} type="password" name="password" id="password" autoComplete='cuurent-password' className={styles.form_input} placeholder='pass0000' />
                     </div>
                 </div>
-                <div className={styles.form_btn}><button className={isFormValid ? '' : styles.disabled} type="submit" disabled={!isFormValid}>登録する</button></div>
+                <div className={styles.form_btn}>
+                    <button className={isFormValid ? '' : styles.disabled} type="submit" disabled={!isFormValid}>登録する</button>
+                    </div>
             </form>
 
             {errorDialogOpen && (
