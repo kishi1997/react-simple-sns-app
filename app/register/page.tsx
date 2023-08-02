@@ -50,16 +50,14 @@ const Register = () => {
             });
             const data = res.data;
             setUserData(data);
-            if(res.status === 200) {
-                router.push('/');
-            }
+            router.push('/');
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setError(error.response?.data?.message || 'Undifined error');
                 setErrorDialogOpen(true);
             } else {
                 setError('Undifined error');
-                console.log(error);
+                setErrorDialogOpen(true);
             }
         }
     }
@@ -95,7 +93,7 @@ const Register = () => {
                 </div>
                 <div className={styles.form_btn}>
                     <button className={isFormValid ? '' : styles.disabled} type="submit" disabled={!isFormValid}>登録する</button>
-                    </div>
+                </div>
             </form>
 
             {errorDialogOpen && (
