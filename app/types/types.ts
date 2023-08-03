@@ -1,4 +1,4 @@
-// 登録情報の型
+// 登録情報
 export type UserData = {
     user: {
         id: number,
