@@ -35,7 +35,6 @@ const Register = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!createAccountUrl) {
-            console.log("createAccountUrl is not defined");
             return;
         }
         try {
@@ -49,7 +48,7 @@ const Register = () => {
                 },
             });
             const data = res.data;
-            setUserData(data);
+            localStorage.setItem("userData", JSON.stringify(data));
             router.push('/');
         } catch (error) {
             if (axios.isAxiosError(error)) {

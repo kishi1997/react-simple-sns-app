@@ -2,16 +2,20 @@
 import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useRecoilValue} from 'recoil';
+import { useRecoilState } from 'recoil';
 import { userDataState } from './atom/state/userDataState';
 
 export default function Home() {
   const router = useRouter();
-  const userData = useRecoilValue(userDataState);
+  const [userData, setUserData] = useRecoilState(userDataState);
 
-  useEffect(()=> {
-    if(!userData) {
+  useEffect(() => {
+    const storedUserData = localStorage.getItem("userData");
+    if(!storedUserData) {
       router.push('/register');
+    } else {
+      const parsedUserData = storedUserData ? JSON.parse(storedUserData) : null;
+      setUserData(parsedUserData);
     }
   }, []);
 
