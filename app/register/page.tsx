@@ -2,9 +2,7 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import styles from './page.module.css'
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/navigation';
-import { userDataState } from '../atom/state/userDataState';
 
 const Register = () => {
     const router = useRouter();
@@ -12,7 +10,6 @@ const Register = () => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [userData, setUserData] = useRecoilState(userDataState);
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
 
@@ -47,8 +44,8 @@ const Register = () => {
                     "Content-Type": "application/json",
                 },
             });
-            const data = res.data;
-            localStorage.setItem("userData", JSON.stringify(data));
+            const token = res.data.token;
+            localStorage.setItem("createdUserToken", JSON.stringify(token));
             router.push('/');
         } catch (error) {
             if (axios.isAxiosError(error)) {
