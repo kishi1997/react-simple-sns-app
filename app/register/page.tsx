@@ -3,8 +3,9 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import styles from './page.module.css'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+export const USER_TOKEN_KEY = "userToken";
 
-const Register = () => {
+export default function Register() {
     const router = useRouter();
     const [error, setError] = useState("");
     const [name, setName] = useState<string>("");
@@ -12,7 +13,7 @@ const Register = () => {
     const [password, setPassword] = useState<string>("");
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
-
+    
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
     }
@@ -41,11 +42,12 @@ const Register = () => {
                 password: password,
             }, {
                 headers: {
-                    "Content-Type": "application/json",
+                 "Content-Type": "application/json",
                 },
             });
             const token = res.data.token;
-            localStorage.setItem("createdUserToken", JSON.stringify(token));
+            // const USER_TOKEN_KEY = "userToken";
+            localStorage.setItem(USER_TOKEN_KEY, JSON.stringify(token));
             router.push('/');
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -102,5 +104,3 @@ const Register = () => {
         </div>
     )
 }
-
-export default Register
