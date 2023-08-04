@@ -1,6 +1,6 @@
 'use client'
-import React, { ChangeEvent, FormEvent, useState } from 'react'
-import styles from './page.module.css'
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import styles from './page.module.css';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 export const USER_TOKEN_KEY = "userToken";
@@ -46,7 +46,6 @@ export default function Register() {
                 },
             });
             const token = res.data.token;
-            // const USER_TOKEN_KEY = "userToken";
             localStorage.setItem(USER_TOKEN_KEY, JSON.stringify(token));
             router.push('/');
         } catch (error) {

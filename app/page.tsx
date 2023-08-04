@@ -1,10 +1,10 @@
 'use client'
+import React from 'react'
 import axios from 'axios';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { USER_TOKEN_KEY } from './register/page';
-import React from 'react'
 
 export default function Home() {
   const getAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
