@@ -3,7 +3,8 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './page.module.css';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { setToken } from '../storage/storage';
+import { setToken, userToken } from '../storage/storage';
+import { instance } from '../axios/axiosInstance';
 
 export default function Register() {
     const router = useRouter();
@@ -13,7 +14,7 @@ export default function Register() {
     const [password, setPassword] = useState<string>("");
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
-    
+
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
     }
@@ -25,38 +26,32 @@ export default function Register() {
         setPassword(e.target.value);
     }
 
-    const validateEmail = (email:string): boolean => {
+    const validateEmail = (email: string): boolean => {
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailPattern.test(email);
     }
-
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!createAccountUrl) {
-            return;
-        }
-        try {
-            const res = await axios.post(createAccountUrl, {
+
+        instance.post(createAccountUrl, {
                 name: name,
                 email: email,
                 password: password,
-            }, {
-                headers: {
-                 "Content-Type": "application/json",
-                },
+            })
+            .then((response) => {
+                const token = response.data.token;
+                setToken(token);
+                router.push('/');
+            })
+            .catch((error) => {
+                if (axios.isAxiosError(error)) {
+                    setError(error.response?.data?.message || 'Undefined error');
+                    setErrorDialogOpen(true);
+                } else {
+                    setError('Undefined error');
+                    setErrorDialogOpen(true);
+                }
             });
-            const token = res.data.token;
-            setToken(token);
-            router.push('/');
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                setError(error.response?.data?.message || 'Undifined error');
-                setErrorDialogOpen(true);
-            } else {
-                setError('Undifined error');
-                setErrorDialogOpen(true);
-            }
-        }
     }
 
     const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
