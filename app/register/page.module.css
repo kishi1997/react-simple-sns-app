@@ -48,12 +48,13 @@
   }
   /* 登録ボタン */
   .form_btn {
+    width: 100%;
     max-width: 200px;
-    margin: 20px auto 0;
+    margin: 40px auto 0;
   }
   .form_btn button {
     display: inline-block;
-    font-size: 20px;
+    font-size: 18px;
     color: #fff;
     background: #000;
     width: 100%;

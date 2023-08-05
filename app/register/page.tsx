@@ -3,7 +3,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './page.module.css';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-export const USER_TOKEN_KEY = "userToken";
+import { setToken } from '../storage/storage';
 
 export default function Register() {
     const router = useRouter();
@@ -19,7 +19,7 @@ export default function Register() {
     }
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
-    };
+    }
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
@@ -46,7 +46,7 @@ export default function Register() {
                 },
             });
             const token = res.data.token;
-            localStorage.setItem(USER_TOKEN_KEY, JSON.stringify(token));
+            setToken(token);
             router.push('/');
         } catch (error) {
             if (axios.isAxiosError(error)) {

@@ -4,12 +4,10 @@ import axios from 'axios';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { USER_TOKEN_KEY } from './register/page';
+import { parsedToken } from './storage/storage';
 
 export default function Home() {
   const getAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
-  const token = localStorage.getItem(USER_TOKEN_KEY);
-  const parsedToken = token ? JSON.parse(token) : null;
   const router = useRouter();
 
   const getAccount = async () => {
