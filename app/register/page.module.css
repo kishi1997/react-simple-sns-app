@@ -65,12 +65,3 @@
   .form_btn button.disabled {
     opacity: .5;
   }
-  /* ダイアログ */
-  .dialog {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .dialog button {
-    padding: 4px 8px;
-  }

@@ -1,24 +1,24 @@
 'use client'
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './page.module.css';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { setToken, userToken } from '../storage/storage';
-import { instance } from '../axios/axiosInstance';
+import { setToken } from '../storage/storage';
+import { instance, useAxiosInterceptors } from '../axios/axiosInstance';
+import ErrorDialog from '../components/errorDialog';
+
 
 export default function Register() {
+    useAxiosInterceptors();
     const router = useRouter();
-    const [error, setError] = useState("");
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
     }
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     }
 
@@ -32,7 +32,6 @@ export default function Register() {
     }
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         instance.post(createAccountUrl, {
                 name: name,
                 email: email,
@@ -44,22 +43,11 @@ export default function Register() {
                 router.push('/');
             })
             .catch((error) => {
-                if (axios.isAxiosError(error)) {
-                    setError(error.response?.data?.message || 'Undefined error');
-                    setErrorDialogOpen(true);
-                } else {
-                    setError('Undefined error');
-                    setErrorDialogOpen(true);
-                }
-            });
+                console.log(error);
+            })
     }
 
     const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
-
-
-    const handleCloseErrorDialog = () => {
-        setErrorDialogOpen(false);
-    }
 
     return (
         <div className={styles.container}>
@@ -88,13 +76,7 @@ export default function Register() {
                 </div>
             </form>
 
-            {errorDialogOpen && (
-                <div className={styles.dialog}>
-                    <div>登録エラーが発生しました。</div>
-                    <div>{error}</div>
-                    <button onClick={handleCloseErrorDialog}>閉じる</button>
-                </div>
-            )}
+            <ErrorDialog />
         </div>
     )
 }
