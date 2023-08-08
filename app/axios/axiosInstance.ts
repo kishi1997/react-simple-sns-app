@@ -1,9 +1,5 @@
 import axios from 'axios';
 import { userToken } from '../storage/storage';
-import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { errorDialogOpenState } from '../atom/state/error';
-import { errorState } from '../atom/state/error';
 
 
 export const instance = axios.create({
@@ -14,29 +10,23 @@ export const instance = axios.create({
     }
 })
 
-export function useAxiosInterceptors() {
-    const [error, setError] = useRecoilState(errorState);
-    const [errorDialogOpen, setErrorDialogOpen] = useRecoilState(errorDialogOpenState);
-    useEffect(() => {
-        const responseInterceptor = instance.interceptors.response.use(
-            (response) => {
-                return response;
-            },
-            (error) => {
-                if (axios.isAxiosError(error)) {
-                    setError(error.response?.data?.message || 'Undefined error')
-                    setErrorDialogOpen(true);
-                    console.log()
-                } else {
-                    setError('Undefined error');
-                    setErrorDialogOpen(true);
-                }
-                return Promise.reject(error);
-            }
-        );
-
-        return () => {
-            axios.interceptors.response.eject(responseInterceptor);
-        };
-    }, []);
-}
+instance.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        const { status } = error.response;
+        switch (status) {
+            case 400:
+                return error.response;
+            case 401:
+                return "Unauthorized";
+            case 404:
+                return error.response?.status;
+            case 500:
+                return "server error";
+            default:
+                return "Undefined error";
+        }
+    }
+);

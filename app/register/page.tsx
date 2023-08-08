@@ -3,17 +3,17 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { setToken } from '../storage/storage';
-import { instance, useAxiosInterceptors } from '../axios/axiosInstance';
-import ErrorDialog from '../components/errorDialog';
+import { instance } from '../axios/axiosInstance';
+import axios from 'axios';
 
 
 export default function Register() {
-    useAxiosInterceptors();
     const router = useRouter();
+    const [error, setError] = useState<string>("");
+    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
@@ -32,7 +32,7 @@ export default function Register() {
     }
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        instance.post(createAccountUrl, {
+            instance.post('/account', {
                 name: name,
                 email: email,
                 password: password,
@@ -43,11 +43,21 @@ export default function Register() {
                 router.push('/');
             })
             .catch((error) => {
-                console.log(error);
+                if (axios.isAxiosError(error)) {
+                    setError(error.response?.data?.message || 'Undefined axios error')
+                    setErrorDialogOpen(true);
+                } else {
+                    setError("Undefined error");
+                    setErrorDialogOpen(true);
+                }
             })
     }
 
     const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
+
+    const handleCloseErrorDialog = () => {
+        setErrorDialogOpen(false);
+    }
 
     return (
         <div className={styles.container}>
@@ -76,7 +86,14 @@ export default function Register() {
                 </div>
             </form>
 
-            <ErrorDialog />
+            { errorDialogOpen && (
+                <div className={styles.dialog}>
+                    <div>登録エラーが発生しました。</div>
+                    <div>{error}</div>
+                    <button onClick={handleCloseErrorDialog}>閉じる</button>
+                </div>
+            )}
         </div>
     )
 }
+
