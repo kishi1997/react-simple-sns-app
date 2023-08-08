@@ -26,7 +26,7 @@ instance.interceptors.response.use(
             case 500:
                 return "server error";
             default:
-                return "Undefined error";
+                return Promise.reject(error.response?.data);
         }
     }
 );

@@ -43,13 +43,8 @@ export default function Register() {
                 router.push('/');
             })
             .catch((error) => {
-                if (axios.isAxiosError(error)) {
-                    setError(error.response?.data?.message || 'Undefined axios error')
+                    setError(error.message);
                     setErrorDialogOpen(true);
-                } else {
-                    setError("Undefined error");
-                    setErrorDialogOpen(true);
-                }
             })
     }
 
