@@ -18,11 +18,11 @@ instance.interceptors.response.use(
         const { status } = error.response;
         switch (status) {
             case 400:
-                return error.response;
+                return Promise.reject(error.response);
             case 401:
                 return "Unauthorized";
             case 404:
-                return error.response?.status;
+                return Promise.reject(error.response?.status);
             case 500:
                 return "server error";
             default:
