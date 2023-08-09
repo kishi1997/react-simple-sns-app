@@ -3,13 +3,13 @@ import React from 'react'
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { instance } from './axios/axiosInstance';
+import { apiRequest } from './axios/axiosInstance';
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    instance.get('/account')
+    apiRequest.get('/account')
       .then(response => {
         return response;
       })

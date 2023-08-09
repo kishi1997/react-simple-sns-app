@@ -2,7 +2,7 @@ import axios from 'axios';
 import { userToken } from '../storage/storage';
 
 
-export const instance = axios.create({
+export const apiRequest = axios.create({
     baseURL: process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL,
     headers: {
         "Content-Type": "application/json",
@@ -10,7 +10,7 @@ export const instance = axios.create({
     }
 })
 
-instance.interceptors.response.use(
+apiRequest.interceptors.response.use(
     (response) => {
         return response;
     },

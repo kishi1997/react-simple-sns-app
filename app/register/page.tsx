@@ -3,9 +3,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { setToken } from '../storage/storage';
-import { instance } from '../axios/axiosInstance';
-import axios from 'axios';
-
+import { apiRequest } from '../axios/axiosInstance';
 
 export default function Register() {
     const router = useRouter();
@@ -32,14 +30,14 @@ export default function Register() {
     }
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-            instance.post('/account', {
+            apiRequest.post('/account', {
                 name: name,
                 email: email,
                 password: password,
             })
             .then((response) => {
-                const token = response.data.token;
-                setToken(token);
+                const data = response.data;
+                setToken(data.token);
                 router.push('/');
             })
             .catch((error) => {
