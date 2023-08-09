@@ -6,6 +6,9 @@ export function setToken(token: string) {
 }
 
 export function getToken() {
-    const token = localStorage.getItem(USER_TOKEN_KEY);
-    return token ? token : null;
+    if (typeof window !== 'undefined') {
+        const token = localStorage.getItem(USER_TOKEN_KEY);
+        return token ? token : null;
+    }
+    return null;
 }
