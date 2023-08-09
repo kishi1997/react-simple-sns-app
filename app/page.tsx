@@ -1,19 +1,23 @@
 'use client'
-import styles from './page.module.css'
+import React from 'react'
+import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useRecoilValue} from 'recoil';
-import { userDataState } from './atom/state/userDataState';
+import { apiRequest } from './axios/axiosInstance';
 
 export default function Home() {
   const router = useRouter();
-  const userData = useRecoilValue(userDataState);
 
-  useEffect(()=> {
-    if(!userData) {
-      router.push('/register');
-    }
+  useEffect(() => {
+    apiRequest.get('/account')
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        router.push('/register');
+      })
   }, []);
+
 
   return (
     <div className={styles.container}>

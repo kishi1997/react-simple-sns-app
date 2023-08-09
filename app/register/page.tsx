@@ -1,69 +1,52 @@
 'use client'
-import React, { ChangeEvent, FormEvent, useState } from 'react'
-import styles from './page.module.css'
-import axios from 'axios';
-import { useRecoilState } from 'recoil';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
-import { userDataState } from '../atom/state/userDataState';
+import { setToken } from '../storage/storage';
+import { apiRequest } from '../axios/axiosInstance';
 
-const Register = () => {
+export default function Register() {
     const router = useRouter();
-    const [error, setError] = useState("");
+    const [error, setError] = useState<string>("");
+    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [userData, setUserData] = useRecoilState(userDataState);
-    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
-    const createAccountUrl = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL + '/account';
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
     }
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
-    };
+    }
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
     }
 
-    const validateEmail = (email:string): boolean => {
+    const validateEmail = (email: string): boolean => {
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailPattern.test(email);
     }
-
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!createAccountUrl) {
-            console.log("createAccountUrl is not defined");
-            return;
-        }
-        try {
-            const res = await axios.post(createAccountUrl, {
+            apiRequest.post('/account', {
                 name: name,
                 email: email,
                 password: password,
-            }, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            const data = res.data;
-            setUserData(data);
-            router.push('/');
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                setError(error.response?.data?.message || 'Undifined error');
-                setErrorDialogOpen(true);
-            } else {
-                setError('Undifined error');
-                setErrorDialogOpen(true);
-            }
-        }
+            })
+            .then((response) => {
+                const data = response.data;
+                setToken(data.token);
+                router.push('/');
+            })
+            .catch((error) => {
+                    setError(error.message);
+                    setErrorDialogOpen(true);
+            })
     }
 
     const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
-
 
     const handleCloseErrorDialog = () => {
         setErrorDialogOpen(false);
@@ -96,7 +79,7 @@ const Register = () => {
                 </div>
             </form>
 
-            {errorDialogOpen && (
+            { errorDialogOpen && (
                 <div className={styles.dialog}>
                     <div>登録エラーが発生しました。</div>
                     <div>{error}</div>
@@ -107,4 +90,3 @@ const Register = () => {
     )
 }
 
-export default Register

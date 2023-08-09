@@ -2,6 +2,7 @@
 import { RecoilRoot } from 'recoil'
 import './globals.css'
 import { Inter } from 'next/font/google'
+import AxiosInterceptor from './axios/axiosInstance'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,10 +19,8 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        <RecoilRoot>
         {children}
-        </RecoilRoot>
-        </body>
+      </body>
     </html>
   )
 }
