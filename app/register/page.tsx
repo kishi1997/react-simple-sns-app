@@ -52,9 +52,6 @@ export default function Register() {
         setErrorDialogOpen(false);
     }
 
-    const Test = process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL;
-    console.log(Test);
-
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>SIMPLE SNS APP</h1>
