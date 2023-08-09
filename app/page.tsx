@@ -11,13 +11,16 @@ export default function Home() {
   useEffect(() => {
     apiRequest.get('/account')
       .then(response => {
-        return response;
+        if (Object.keys(response.data).length === 0) {
+          router.push('/register');
+        } else {
+          return response;
+        }
       })
       .catch(error => {
         router.push('/register');
       })
-  }, []);
-
+  });
 
   return (
     <div className={styles.container}>
