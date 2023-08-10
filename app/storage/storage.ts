@@ -8,7 +8,5 @@ export function getToken() {
     if (typeof window !== 'undefined') {
         const token = localStorage.getItem(USER_TOKEN_KEY);
         return token ? token : null;
-    } else {
-        return null;
     }
 }
