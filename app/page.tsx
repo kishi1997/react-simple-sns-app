@@ -13,8 +13,6 @@ export default function Home() {
       .then(response => {
         if (Object.keys(response.data).length === 0) {
           router.push('/register');
-        } else {
-          return response;
         }
       })
       .catch(error => {

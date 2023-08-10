@@ -9,4 +9,7 @@ export function getToken() {
         const token = localStorage.getItem(USER_TOKEN_KEY);
         return token ? token : null;
     }
+    else {
+        return null;
+    }
 }
