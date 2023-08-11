@@ -12,6 +12,7 @@ export default function Register() {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
@@ -30,6 +31,7 @@ export default function Register() {
     }
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsButtonDisabled(true);
         apiRequest.post('/account', {
             name: name,
             email: email,
@@ -75,7 +77,7 @@ export default function Register() {
                     </div>
                 </div>
                 <div className={styles.form_btn}>
-                    <button className={isFormValid ? '' : styles.disabled} type="submit" disabled={!isFormValid}>登録する</button>
+                    <button type="submit" disabled={!isFormValid || isButtonDisabled}>登録する</button>
                 </div>
             </form>
 
