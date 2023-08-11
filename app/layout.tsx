@@ -1,9 +1,5 @@
-'use client'
-import { RecoilRoot } from 'recoil'
 import './globals.css'
 import { Inter } from 'next/font/google'
-import AxiosInterceptor from './axios/axiosInstance'
-
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {

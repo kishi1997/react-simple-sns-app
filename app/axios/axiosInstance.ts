@@ -1,14 +1,27 @@
 import axios from 'axios';
-import { userToken } from '../storage/storage';
+import { getToken } from '../storage/storage';
 
 
 export const apiRequest = axios.create({
     baseURL: process.env.NEXT_PUBLIC_ENDPOINT_BASIC_URL,
     headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${userToken}`
+        "Content-Type": "application/json"
     }
 })
+
+apiRequest.interceptors.request.use(
+    config => {
+        const userToken = getToken();
+        if (userToken) {
+            config.headers.Authorization = `Bearer ${userToken}`;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
+
 
 apiRequest.interceptors.response.use(
     (response) => {

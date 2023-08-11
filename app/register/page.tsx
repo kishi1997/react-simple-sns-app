@@ -30,19 +30,19 @@ export default function Register() {
     }
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-            apiRequest.post('/account', {
-                name: name,
-                email: email,
-                password: password,
-            })
+        apiRequest.post('/account', {
+            name: name,
+            email: email,
+            password: password,
+        })
             .then((response) => {
                 const data = response.data;
                 setToken(data.token);
                 router.push('/');
             })
             .catch((error) => {
-                    setError(error.message);
-                    setErrorDialogOpen(true);
+                setError(error.message);
+                setErrorDialogOpen(true);
             })
     }
 
@@ -79,7 +79,7 @@ export default function Register() {
                 </div>
             </form>
 
-            { errorDialogOpen && (
+            {errorDialogOpen && (
                 <div className={styles.dialog}>
                     <div>登録エラーが発生しました。</div>
                     <div>{error}</div>
