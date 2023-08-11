@@ -46,6 +46,9 @@ export default function Register() {
                 setError(error.message);
                 setErrorDialogOpen(true);
             })
+            .finally(()=> {
+                setIsButtonDisabled(false);
+            })
     }
 
     const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
