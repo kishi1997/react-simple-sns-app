@@ -11,7 +11,6 @@ export default function Home() {
   useEffect(() => {
     apiRequest.get('/account')
       .then(response => {
-        console.log(response);
         if (Object.keys(response.data).length === 0) {
           router.push('/login');
         }
