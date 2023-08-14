@@ -11,12 +11,13 @@ export default function Home() {
   useEffect(() => {
     apiRequest.get('/account')
       .then(response => {
+        console.log(response);
         if (Object.keys(response.data).length === 0) {
-          router.push('/register');
+          router.push('/login');
         }
       })
       .catch(error => {
-        router.push('/register');
+        router.push('/login');
       })
   });
 
