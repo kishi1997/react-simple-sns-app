@@ -1,63 +1,71 @@
 .container {
-    max-width: 480px;
-    margin-inline: auto;
-    padding: 80px 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    justify-content: center;
-    align-items: center;
-  }
-  .title {
-    font-size: 28px;
-  }
-  /* フォーム */
-  .form {
-      width: 100%;
-    }
-    .form_container {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      justify-content: center;
-    }
-    .form_label_required {
-      color: #fff;
-      font-size: 12px;
-      font-weight: bold;
-      background: #000;
-      line-height: 1;
-      display: inline-block;
-      padding: 4px 12px;
-      margin-right: 12px;
-      border: 1px solid #fff;
-    }
-    .form_label_title {
-      line-height: 1;
-    }
-    .form_input {
-      width: 100%;
-      padding: 8px;
-      background: #fff;
-      outline: none;
-      margin-top: 12px;
-      color: #000;
-    }
-    .form_btn {
-      width: 100%;
-      max-width: 200px;
-      margin: 40px auto 0;
-    }
-    .form_btn button {
-      display: inline-block;
-      font-size: 18px;
-      color: #fff;
-      background: #000;
-      width: 100%;
-      padding: 4px 12px;
-      border: 1px solid #fff;
-      cursor: pointer;
-    }
-    .form_btn button.disabled {
-      opacity: .5;
-    }
+  max-width: 480px;
+  margin-inline: auto;
+  padding: 80px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+}
+.title {
+  font-size: 28px;
+}
+.form {
+  width: 100%;
+}
+.form_container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-content: center;
+}
+.form_label_required {
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  background: #000;
+  line-height: 1;
+  display: inline-block;
+  padding: 4px 12px;
+  margin-right: 12px;
+  border: 1px solid #fff;
+}
+.form_label_title {
+  line-height: 1;
+}
+.form_input {
+  width: 100%;
+  padding: 8px;
+  background: #fff;
+  outline: none;
+  margin-top: 12px;
+  color: #000;
+}
+.form_btn {
+  width: 100%;
+  max-width: 200px;
+  margin: 40px auto 0;
+}
+.form_btn button {
+  display: inline-block;
+  font-size: 18px;
+  color: #fff;
+  background: #000;
+  width: 100%;
+  padding: 4px 12px;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+.form_btn button:disabled {
+  opacity: .5;
+}
+/* ダイアログ */
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.dialog button {
+  padding: 4px 8px;
+}

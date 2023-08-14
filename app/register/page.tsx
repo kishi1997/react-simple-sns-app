@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { setToken } from '../storage/storage';
 import { apiRequest } from '../axios/axiosInstance';
 import { validateEmail } from '../validation/email';
+import Link from 'next/link';
 
 export default function Register() {
     const router = useRouter();
@@ -57,7 +58,7 @@ export default function Register() {
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>SIMPLE SNS APP</h1>
-            <div>ログイン済みの方はこちら</div>
+            <Link href={'../login'}>登録済みの方はこちら</Link>
             <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.form_container}>
                     <div>

@@ -5,11 +5,15 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { apiRequest } from '../axios/axiosInstance';
 import { validateEmail } from '../validation/email';
+import { setToken } from '../storage/storage';
 
 const Login = () => {
     const router = useRouter();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [error, setError] = useState<string>("");
+    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -21,16 +25,27 @@ const Login = () => {
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsButtonDisabled(true);
         apiRequest.post('./auth', {
             email: email,
             password: password
         })
-        .then (response => {
+        .then ((response) => {
+            const data = response.data;
+            setToken(data.token);
             router.push('/')
         })
-        .catch(error => {
-            console.log(error);
+        .catch((error) => {
+            setErrorDialogOpen(true);
+            setError(error.data.message);
         })
+        .finally(()=> {
+            setIsButtonDisabled(false);
+        })
+    }
+
+    const handleCloseErrorDialog = () => {
+        setErrorDialogOpen(false);
     }
 
     const isFormValid = email.length > 0 && validateEmail(email) && password.length >= 8;
@@ -53,9 +68,16 @@ const Login = () => {
                     </div>
                 </div>
                 <div className={styles.form_btn}>
-                    <button className={isFormValid ? '' : styles.disabled} type="submit" disabled={!isFormValid}>登録する</button>
+                    <button type="submit" disabled={!isFormValid || isButtonDisabled}>登録する</button>
                 </div>
             </form>
+            {errorDialogOpen && (
+                <div className={styles.dialog}>
+                    <div>登録エラーが発生しました。</div>
+                    <div>{error}</div>
+                    <button onClick={handleCloseErrorDialog}>閉じる</button>
+                </div>
+            )}
         </div>
     )
 }

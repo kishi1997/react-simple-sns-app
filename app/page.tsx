@@ -10,12 +10,12 @@ export default function Home() {
 
   useEffect(() => {
     apiRequest.get('/account')
-      .then(response => {
+      .then((response) => {
         if (Object.keys(response.data).length === 0) {
           router.push('/login');
         }
       })
-      .catch(error => {
+      .catch((error) => {
         router.push('/login');
       })
   });
