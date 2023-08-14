@@ -12,11 +12,11 @@ export default function Home() {
     apiRequest.get('/account')
       .then(response => {
         if (Object.keys(response.data).length === 0) {
-          router.push('/register');
+          router.push('/login');
         }
       })
       .catch(error => {
-        router.push('/register');
+        router.push('/login');
       })
   });
 

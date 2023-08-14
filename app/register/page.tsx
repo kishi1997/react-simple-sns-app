@@ -4,6 +4,7 @@ import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { setToken } from '../storage/storage';
 import { apiRequest } from '../axios/axiosInstance';
+import { validateEmail } from '../validation/email';
 
 export default function Register() {
     const router = useRouter();
@@ -25,10 +26,6 @@ export default function Register() {
         setPassword(e.target.value);
     }
 
-    const validateEmail = (email: string): boolean => {
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailPattern.test(email);
-    }
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsButtonDisabled(true);
