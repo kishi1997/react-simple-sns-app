@@ -4,6 +4,7 @@ import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { apiRequest } from '../axios/axiosInstance';
+import { validateEmail } from '../validation/email';
 
 const Login = () => {
     const router = useRouter();
@@ -16,11 +17,6 @@ const Login = () => {
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
-    }
-
-    const validateEmail = (email:string): boolean => {
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailPattern.test(email);
     }
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
