@@ -62,7 +62,7 @@
   border: 1px solid #fff;
   cursor: pointer;
 }
-.form_btn button.disabled {
+.form_btn button:disabled {
   opacity: .5;
 }
 /* ダイアログ */
