@@ -64,7 +64,7 @@ const Login = () => {
                 </div>
                 <div className={styles.form_btn}>
                     <AsyncButton onClick={handleLogin} isDisabled={!isFormValid}>
-                        登録する
+                        ログインする
                     </AsyncButton>
                 </div>
             </form>
