@@ -13,8 +13,13 @@ export const AsyncButton = ({ onClick, children, isDisabled }: asyncButtonProps)
     const handleClick: MouseEventHandler<HTMLButtonElement> = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        await onClick();
-        setIsLoading(false);
+        try {
+            await onClick();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
