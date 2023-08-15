@@ -4,6 +4,7 @@ import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { apiRequest } from './axios/axiosInstance';
+import Link from 'next/link';
 
 export default function Home() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>SIMPLE SNS APP</h1>
-      <div>ログイン済です。</div>
+      <Link href={'./mypage'}>マイページ</Link>
     </div>
   )
 }
