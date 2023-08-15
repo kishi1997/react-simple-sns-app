@@ -1,11 +1,12 @@
 'use client'
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useState} from 'react'
 import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { apiRequest } from '../axios/axiosInstance';
 import { validateEmail } from '../validation/email';
 import { setToken } from '../storage/storage';
+import { AsyncButton } from '../components/asyncButton';
 
 const Login = () => {
     const router = useRouter();
@@ -13,7 +14,6 @@ const Login = () => {
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
-    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -23,25 +23,20 @@ const Login = () => {
         setPassword(e.target.value);
     }
 
-    const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsButtonDisabled(true);
+    const handleLogin = async () => {
         apiRequest.post('./auth', {
             email: email,
             password: password
         })
-        .then ((response) => {
-            const data = response.data;
-            setToken(data.token);
-            router.push('/')
-        })
-        .catch((error) => {
-            setErrorDialogOpen(true);
-            setError(error.data.message);
-        })
-        .finally(()=> {
-            setIsButtonDisabled(false);
-        })
+            .then((response) => {
+                const data = response.data;
+                setToken(data.token);
+                router.push('/')
+            })
+            .catch((error) => {
+                setErrorDialogOpen(true);
+                setError(error.data.message);
+            })
     }
 
     const handleCloseErrorDialog = () => {
@@ -68,7 +63,9 @@ const Login = () => {
                     </div>
                 </div>
                 <div className={styles.form_btn}>
-                    <button type="submit" disabled={!isFormValid || isButtonDisabled}>登録する</button>
+                    <AsyncButton onClick={handleLogin} isDisabled={!isFormValid}>
+                        登録する
+                    </AsyncButton>
                 </div>
             </form>
             {errorDialogOpen && (

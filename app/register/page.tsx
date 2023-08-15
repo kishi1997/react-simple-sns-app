@@ -6,6 +6,7 @@ import { setToken } from '../storage/storage';
 import { apiRequest } from '../axios/axiosInstance';
 import { validateEmail } from '../validation/email';
 import Link from 'next/link';
+import { AsyncButton } from '../components/asyncButton';
 
 export default function Register() {
     const router = useRouter();
@@ -14,7 +15,6 @@ export default function Register() {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
@@ -27,9 +27,7 @@ export default function Register() {
         setPassword(e.target.value);
     }
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsButtonDisabled(true);
+    const handleSubmit = async () => {
         apiRequest.post('/account', {
             name: name,
             email: email,
@@ -44,9 +42,6 @@ export default function Register() {
                 setError(error.message);
                 setErrorDialogOpen(true);
             })
-            .finally(()=> {
-                setIsButtonDisabled(false);
-            })
     }
 
     const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
@@ -58,7 +53,7 @@ export default function Register() {
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>SIMPLE SNS APP</h1>
-            <Link href={'../login'}>登録済みの方はこちら</Link>
+            <Link href={'../login'}>ログインはこちら</Link>
             <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.form_container}>
                     <div>
@@ -78,7 +73,9 @@ export default function Register() {
                     </div>
                 </div>
                 <div className={styles.form_btn}>
-                    <button type="submit" disabled={!isFormValid || isButtonDisabled}>登録する</button>
+                    <AsyncButton onClick={handleSubmit} isDisabled={!isFormValid}>
+                        登録する
+                    </AsyncButton>
                 </div>
             </form>
 
