@@ -1,17 +1,16 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { userDataState } from '../atom/state/userDataState';
 import { apiRequest } from '../axios/axiosInstance';
+import { userData } from '../types/userData';
 
 const MyPage = () => {
   const router = useRouter();
-  const [userData, setUserData] = useRecoilState(userDataState);
+  const [userData, setUserData] = useState<userData | null>(null);
 
   useEffect(() => {
     apiRequest.get('/account')
@@ -29,7 +28,7 @@ const MyPage = () => {
     <div className={styles.container}>
       <h1 className={styles.title}>SIMPLE SNS APP</h1>
       <div className={styles.info}>
-        <Image width={40} height={40} src={userData?.iconImageUrl || "./nobody.svg"} alt='プロフィール画像' />
+        <Image width={40} height={40} src={userData?.iconImageUrl || "./icon/default_profile_icon.svg"} alt='プロフィール画像' />
         <span>名前：{userData?.name}</span>
         <span>email：{userData?.email}</span>
         <span>id：{userData?.id}</span>
