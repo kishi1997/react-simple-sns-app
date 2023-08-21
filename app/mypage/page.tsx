@@ -11,7 +11,7 @@ const MyPage = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>SIMPLE SNS APP</h1>
+      <h1 className={styles.title}>MY PAGE</h1>
       <div className={styles.info}>
         <Image width={40} height={40} src={userData?.iconImageUrl || "./icon/default_profile_icon.svg"} alt='プロフィール画像' />
         <span>名前：{userData?.name}</span>

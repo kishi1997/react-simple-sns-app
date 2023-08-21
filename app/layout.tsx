@@ -10,10 +10,11 @@ import { apiRequest } from './axios/axiosInstance'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export function IsLogin () {
+export function LoginChecker ({children}: {children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname()
   const setUserData = useSetRecoilState(userDataState);
+
   useEffect(() => {
     if(pathname === "/login" || pathname === "/register") return;
     apiRequest.get('/account')
@@ -28,7 +29,7 @@ export function IsLogin () {
         router.push('/login');
       })
   }, [pathname]);
-  return null;
+  return <>{children}</>;
 }
 
 export default function RootLayout({
@@ -38,12 +39,13 @@ export default function RootLayout({
 }) {
   return (
     <RecoilRoot>
-      <IsLogin />
-      <html lang="ja">
-        <body className={inter.className}>
-          {children}
-        </body>
-      </html>
+      <LoginChecker>
+        <html lang="ja">
+          <body className={inter.className}>
+            {children}
+          </body>
+        </html>
+      </LoginChecker>
     </RecoilRoot>
   )
 }

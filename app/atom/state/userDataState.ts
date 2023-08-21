@@ -1,11 +1,5 @@
 import { atom } from 'recoil';
-
-type userData = {
-    id: number,
-    name: string,
-    email: string,
-    iconImageUrl: string
-}
+import { userData } from '../../types/userData';
 
 export const userDataState = atom<userData | null>({
     key: "userDataState",
