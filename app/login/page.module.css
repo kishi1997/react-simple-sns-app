@@ -69,3 +69,11 @@
 .dialog button {
   padding: 4px 8px;
 }
+.flashMessage {
+  position: absolute;
+  top: 20px;
+  background: red;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 20px;
+}

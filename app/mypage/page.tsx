@@ -3,26 +3,11 @@ import React, { useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css'
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { apiRequest } from '../axios/axiosInstance';
-import { userData } from '../types/userData';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../atom/state/userDataState';
 
 const MyPage = () => {
-  const router = useRouter();
-  const [userData, setUserData] = useState<userData | null>(null);
-
-  useEffect(() => {
-    apiRequest.get('/account')
-      .then((response) => {
-        const data = response.data;
-        setUserData(data.user);
-      })
-      .catch((error) => {
-        router.push('/login');
-      })
-  });
-
+  const userData = useRecoilValue(userDataState);
 
   return (
     <div className={styles.container}>
