@@ -5,10 +5,30 @@ import Link from 'next/link';
 import styles from './page.module.css'
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../atom/state/userDataState';
+import { apiRequest } from '../axios/axiosInstance';
+import { useRouter } from 'next/navigation';
+import { USER_TOKEN_KEY } from '../storage/storage';
+import { FlashMessage, setLocalFlashMessage } from '../components/flashMessage';
 
 const MyPage = () => {
+  const router = useRouter();
   const userData = useRecoilValue(userDataState);
 
+  const handleLogOut = async () => {
+    const confirmLogOut = window.confirm("ログアウトしますか？");
+    if (!confirmLogOut) return;
+      apiRequest.delete('/auth', {
+        data: { "deviceId": "string" }
+      })
+        .then((response) => {
+          localStorage.removeItem(USER_TOKEN_KEY);
+          setLocalFlashMessage("ログアウトしました");
+          router.push('/login');
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+  }
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>MY PAGE</h1>
@@ -22,7 +42,7 @@ const MyPage = () => {
         <Link href="../login">プロフィールを編集</Link>
       </div>
       <div className={styles.btn}>
-        <button>ログアウトする</button>
+        <button onClick={handleLogOut}>ログアウトする</button>
       </div>
     </div>
   )
