@@ -1,5 +1,6 @@
 'use client'
 import { MouseEventHandler, useState } from "react";
+import styles from '../styles/asyncButton.module.css'
 
 type asyncButtonProps = {
     onClick: () => Promise<void>;
@@ -23,8 +24,10 @@ export const AsyncButton = ({ onClick, children, isDisabled }: asyncButtonProps)
     };
 
     return (
-        <button type="button" onClick={handleClick} disabled={isLoading || isDisabled}>
-            {children}
-        </button>
+        <div className={styles.form_btn}>
+            <button type="button" onClick={handleClick} disabled={isLoading || isDisabled}>
+                {children}
+            </button>
+        </div>
     );
 };

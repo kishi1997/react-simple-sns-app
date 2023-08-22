@@ -72,11 +72,9 @@ export default function Register() {
                         <input onChange={handlePasswordChange} value={password} type="password" name="password" id="password" autoComplete='cuurent-password' className={styles.form_input} placeholder='pass0000' />
                     </div>
                 </div>
-                <div className={styles.form_btn}>
-                    <AsyncButton onClick={handleSubmit} isDisabled={!isFormValid}>
-                        登録する
-                    </AsyncButton>
-                </div>
+                <AsyncButton onClick={handleSubmit} isDisabled={!isFormValid}>
+                    登録する
+                </AsyncButton>
             </form>
 
             {errorDialogOpen && (

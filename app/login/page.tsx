@@ -1,5 +1,5 @@
 'use client'
-import React, { ChangeEvent, useState} from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -47,7 +47,7 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>SIMPLE SNS APP</h1>
+            <h1 className={styles.title}>LOGIN</h1>
             <Link href="../register">新規登録の方はこちら</Link>
             <form className={styles.form} onSubmit={handleLogin}>
                 <div className={styles.form_container}>
@@ -62,11 +62,9 @@ const Login = () => {
                         <input onChange={handlePasswordChange} value={password} type="password" name="password" id="password" autoComplete='cuurent-password' className={styles.form_input} placeholder='pass0000' />
                     </div>
                 </div>
-                <div className={styles.form_btn}>
-                    <AsyncButton onClick={handleLogin} isDisabled={!isFormValid}>
-                        ログインする
-                    </AsyncButton>
-                </div>
+                <AsyncButton onClick={handleLogin} isDisabled={!isFormValid}>
+                    ログインする
+                </AsyncButton>
             </form>
             {errorDialogOpen && (
                 <div className={styles.dialog}>

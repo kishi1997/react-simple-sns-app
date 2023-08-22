@@ -1,0 +1,47 @@
+.container {
+    max-width: 480px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+  }
+  .title {
+    font-size: 28px;
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+  .link {
+    width: 100%;
+  }
+  .link a {
+    display: inline-block;
+    font-size: 18px;
+    color: #000;
+    background: #fff;
+    width: 100%;
+    text-align: center;
+    padding: 4px 0;
+    border: 1px solid #000;
+    cursor: pointer;
+  }
+  .btn {
+    width: 100%;
+    max-width: 200px;
+  }
+  .btn button {
+    display: inline-block;
+    font-size: 18px;
+    color: #fff;
+    background: #000;
+    width: 100%;
+    padding: 4px 0;
+    border: 1px solid #fff;
+    cursor: pointer;
+  }
