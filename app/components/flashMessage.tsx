@@ -3,7 +3,7 @@ import styles from '../styles/flashMessage.module.css'
 
 export const FLASH_MESSAGE = "flashMessage";
 
-export function setLocalFlashMessage(e: string) {
+export function setSessionFlashMessage(e: string) {
     sessionStorage.setItem(FLASH_MESSAGE, e);
 }
 

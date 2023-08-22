@@ -8,7 +8,7 @@ import { userDataState } from '../atom/state/userDataState';
 import { apiRequest } from '../axios/axiosInstance';
 import { useRouter } from 'next/navigation';
 import { USER_TOKEN_KEY } from '../storage/storage';
-import { FlashMessage, setLocalFlashMessage } from '../components/flashMessage';
+import { setSessionFlashMessage } from '../components/flashMessage';
 
 const MyPage = () => {
   const router = useRouter();
@@ -22,7 +22,7 @@ const MyPage = () => {
       })
         .then((response) => {
           localStorage.removeItem(USER_TOKEN_KEY);
-          setLocalFlashMessage("ログアウトしました");
+          setSessionFlashMessage("ログアウトしました");
           router.push('/login');
         })
         .catch((error) => {
