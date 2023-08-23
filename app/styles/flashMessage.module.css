@@ -1,6 +1,8 @@
 .flashMessage {
     position: absolute;
     top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     background: green;
     color: #fff;
     border-radius: 10px;

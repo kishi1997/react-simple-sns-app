@@ -1,28 +1,29 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css'
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataState } from '../atom/state/userDataState';
 import { apiRequest } from '../axios/axiosInstance';
 import { useRouter } from 'next/navigation';
 import { USER_TOKEN_KEY } from '../storage/storage';
-import { setSessionFlashMessage } from '../components/flashMessage';
+import { flashMessageState } from '../atom/state/flashMessageState';
 
 const MyPage = () => {
   const router = useRouter();
   const userData = useRecoilValue(userDataState);
+  const setUserData = useSetRecoilState(userDataState);
+  const setFlashMessage = useSetRecoilState(flashMessageState);
 
   const handleLogOut = async () => {
     const confirmLogOut = window.confirm("ログアウトしますか？");
     if (!confirmLogOut) return;
-      apiRequest.delete('/auth', {
-        data: { "deviceId": "string" }
-      })
+      apiRequest.delete('/auth')
         .then((response) => {
           localStorage.removeItem(USER_TOKEN_KEY);
-          setSessionFlashMessage("ログアウトしました");
+          setUserData(null);
+          setFlashMessage("ログアウトしました");
           router.push('/login');
         })
         .catch((error) => {

@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from '../styles/flashMessage.module.css'
-
-export const FLASH_MESSAGE = "flashMessage";
-
-export function setSessionFlashMessage(e: string) {
-    sessionStorage.setItem(FLASH_MESSAGE, e);
-}
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { flashMessageState } from "../atom/state/flashMessageState";
 
 export const FlashMessage = () => {
-    const [flashMessage, setFlashMessage] = useState<string>("");
+    const flashMessage = useRecoilValue(flashMessageState);
+    const setFlashMessage = useSetRecoilState(flashMessageState);
     useEffect(() => {
-        const message = sessionStorage.getItem(FLASH_MESSAGE);
-        if (message && message.length > 0) {
-            setFlashMessage(message);
+        if (flashMessage && flashMessage.length > 0) {
             setTimeout(() => {
                 setFlashMessage("");
-                sessionStorage.removeItem(FLASH_MESSAGE);
             }, 3000);
         }
-    }, []);
+    }, [flashMessage]);
 
     return (
-        <div className={styles.flashMessage} style={{ display: flashMessage ? "block" : "none" }}>
-            {flashMessage}
-        </div>
+        <>
+            {flashMessage && flashMessage.length > 0 && (
+                <div className={styles.flashMessage}>
+                    {flashMessage}
+                </div>
+            )}
+        </>
     )
 };

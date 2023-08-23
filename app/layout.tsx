@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { apiRequest } from './axios/axiosInstance'
+import { FlashMessage } from './components/flashMessage';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -42,6 +43,7 @@ export default function RootLayout({
       <LoginChecker>
         <html lang="ja">
           <body className={inter.className}>
+            <FlashMessage />
             {children}
           </body>
         </html>

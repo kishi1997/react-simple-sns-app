@@ -7,7 +7,6 @@ import { apiRequest } from '../axios/axiosInstance';
 import { validateEmail } from '../validation/email';
 import { setToken } from '../storage/storage';
 import { AsyncButton } from '../components/asyncButton';
-import { FlashMessage } from '../components/flashMessage';
 
 const Login = () => {
     const router = useRouter();
@@ -48,7 +47,6 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
-            <FlashMessage />
             <h1 className={styles.title}>LOGIN</h1>
             <Link href="../register">新規登録の方はこちら</Link>
             <form className={styles.form} onSubmit={handleLogin}>
