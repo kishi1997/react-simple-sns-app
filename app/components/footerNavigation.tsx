@@ -12,8 +12,11 @@ const FooterNavigation = () => {
   const pathname = usePathname();
 
   useEffect(()=> {
-    if (pathname === "/login" || pathname === "/register") return;
-    setFooterDisplay(true);
+    if (pathname === "/login" || pathname === "/register") {
+      setFooterDisplay(false);
+    } else {
+      setFooterDisplay(true);
+    }
   },[pathname])
 
   return (
