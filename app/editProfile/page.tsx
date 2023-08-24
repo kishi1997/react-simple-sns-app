@@ -14,7 +14,7 @@ export default function EditProfile() {
     const [name, setName] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [newIconImageUrl, setNewIconImageUrl] = useState<File>();
-    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
     const setFlashMessage = useSetRecoilState(flashMessageState);
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,13 +45,13 @@ export default function EditProfile() {
             router.push('../mypage');
             setFlashMessage("変更が完了しました。");
         }
-        catch (error) {
+        catch (error:any) {
             setError(error.message);
             setErrorDialogOpen(true);
         }
     };
 
-    const isFormValid = name.length < 200;
+    const isFormValid = name.length > 0;
 
     const handleCloseErrorDialog = () => {
         setErrorDialogOpen(false);
