@@ -1,14 +1,28 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css'
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataState } from '../atom/state/userDataState';
+import { useRouter } from 'next/navigation';
+import { USER_TOKEN_KEY } from '../storage/storage';
+import { flashMessageState } from '../atom/state/flashMessageState';
 
 const MyPage = () => {
+  const router = useRouter();
   const userData = useRecoilValue(userDataState);
+  const setUserData = useSetRecoilState(userDataState);
+  const setFlashMessage = useSetRecoilState(flashMessageState);
 
+  const handleLogOut = async () => {
+    const confirmLogOut = window.confirm("ログアウトしますか？");
+    if (!confirmLogOut) return;
+    localStorage.removeItem(USER_TOKEN_KEY);
+    setUserData(null);
+    setFlashMessage("ログアウトしました");
+    router.push('/login');
+  }
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>MY PAGE</h1>
@@ -22,7 +36,7 @@ const MyPage = () => {
         <Link href="../login">プロフィールを編集</Link>
       </div>
       <div className={styles.btn}>
-        <button>ログアウトする</button>
+        <button onClick={handleLogOut}>ログアウトする</button>
       </div>
     </div>
   )
