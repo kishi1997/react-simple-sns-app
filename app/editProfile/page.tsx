@@ -1,26 +1,28 @@
 'use client'
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import { apiRequest } from '../axios/axiosInstance';
 import { AsyncButton } from '../components/asyncButton';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataState } from '../atom/state/userDataState';
 import { flashMessageState } from '../atom/state/flashMessageState';
+import { ErrorDialog } from '../components/errorDialog';
+import { errorDialogOpenState } from '../atom/state/errorDialogOpenState';
 
 export default function EditProfile() {
     const router = useRouter();
     const userData = useRecoilValue(userDataState);
     const [name, setName] = useState<string>("");
-    const [error, setError] = useState<string>("");
     const [newIconImageUrl, setNewIconImageUrl] = useState<File>();
-    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
+    const [errorDialogOpen, setErrorDialogOpen] = useRecoilState(errorDialogOpenState);
     const setFlashMessage = useSetRecoilState(flashMessageState);
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
     }
-    const handleIconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleIconChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             setNewIconImageUrl(e.target.files[0]);
         }
@@ -53,10 +55,6 @@ export default function EditProfile() {
 
     const isFormValid = name.length > 0;
 
-    const handleCloseErrorDialog = () => {
-        setErrorDialogOpen(false);
-    }
-
     useEffect(() => {
         if (userData) {
             setName(userData.name);
@@ -81,13 +79,7 @@ export default function EditProfile() {
                     変更する
                 </AsyncButton>
             </form>
-            {errorDialogOpen && (
-                <div className={styles.dialog}>
-                    <div>エラーが発生しました。</div>
-                    <div>{error}</div>
-                    <button onClick={handleCloseErrorDialog}>閉じる</button>
-                </div>
-            )}
+            <ErrorDialog errorDialogOpen={errorDialogOpen} error={error}/>
         </div>
     )
 }

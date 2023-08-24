@@ -1,17 +1,20 @@
 'use client'
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './page.module.css';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { setToken } from '../storage/storage';
 import { apiRequest } from '../axios/axiosInstance';
 import { validateEmail } from '../validation/email';
-import Link from 'next/link';
 import { AsyncButton } from '../components/asyncButton';
+import { ErrorDialog } from '../components/errorDialog';
+import { useRecoilState } from 'recoil';
+import { errorDialogOpenState } from '../atom/state/errorDialogOpenState';
 
 export default function Register() {
     const router = useRouter();
     const [error, setError] = useState<string>("");
-    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+    const [errorDialogOpen, setErrorDialogOpen] = useRecoilState(errorDialogOpenState);
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -46,10 +49,6 @@ export default function Register() {
 
     const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
 
-    const handleCloseErrorDialog = () => {
-        setErrorDialogOpen(false);
-    }
-
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>SIMPLE SNS APP</h1>
@@ -76,14 +75,7 @@ export default function Register() {
                     登録する
                 </AsyncButton>
             </form>
-
-            {errorDialogOpen && (
-                <div className={styles.dialog}>
-                    <div>登録エラーが発生しました。</div>
-                    <div>{error}</div>
-                    <button onClick={handleCloseErrorDialog}>閉じる</button>
-                </div>
-            )}
+            <ErrorDialog errorDialogOpen={errorDialogOpen} error={error}/>
         </div>
     )
 }

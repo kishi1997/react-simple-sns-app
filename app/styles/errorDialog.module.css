@@ -1,0 +1,8 @@
+  .dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .dialog button {
+    padding: 4px 8px;
+  }
