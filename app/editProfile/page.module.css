@@ -21,7 +21,6 @@
     gap: 40px;
     justify-content: center;
   }
-  /* 必須ボタン */
   .form_label_required {
     color: #fff;
     font-size: 12px;
@@ -33,11 +32,9 @@
     margin-right: 12px;
     border: 1px solid #fff;
   }
-  /* ラベル名 */
   .form_label_title {
     line-height: 1;
   }
-  /* 情報入力欄 */
   .form_input {
     width: 100%;
     padding: 8px;
@@ -46,3 +43,12 @@
     margin-top: 12px;
     color: #000;
   }
+  /* ダイアログ */
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.dialog button {
+  padding: 4px 8px;
+}

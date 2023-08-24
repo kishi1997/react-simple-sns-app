@@ -12,7 +12,9 @@ export default function EditProfile() {
     const router = useRouter();
     const userData = useRecoilValue(userDataState);
     const [name, setName] = useState<string>("");
+    const [error, setError] = useState<string>("");
     const [newIconImageUrl, setNewIconImageUrl] = useState<File>();
+    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const setFlashMessage = useSetRecoilState(flashMessageState);
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,24 +32,30 @@ export default function EditProfile() {
             "email": userData?.email
         });
         try {
-            apiRequest.patch('/account/profile', newUserData);
+            await apiRequest.patch('/account/profile', newUserData)
             if (newIconImageUrl) {
                 const newIcon = new FormData();
                 newIcon.append('file', newIconImageUrl);
-                apiRequest.patch('/account/icon_image', newIcon, {
+                await apiRequest.patch('/account/icon_image', newIcon, {
                     headers: {
                         "content-type": "multipart/form-data"
                     }
-                });
+                })
             }
             router.push('../mypage');
             setFlashMessage("変更が完了しました。");
-        } catch (error) {
-            console.error(error);
+        }
+        catch (error) {
+            setError(error.message);
+            setErrorDialogOpen(true);
         }
     };
 
-    const isFormValid = name.length > 0;
+    const isFormValid = name.length < 200;
+
+    const handleCloseErrorDialog = () => {
+        setErrorDialogOpen(false);
+    }
 
     useEffect(() => {
         if (userData) {
@@ -73,6 +81,13 @@ export default function EditProfile() {
                     変更する
                 </AsyncButton>
             </form>
+            {errorDialogOpen && (
+                <div className={styles.dialog}>
+                    <div>エラーが発生しました。</div>
+                    <div>{error}</div>
+                    <button onClick={handleCloseErrorDialog}>閉じる</button>
+                </div>
+            )}
         </div>
     )
 }
