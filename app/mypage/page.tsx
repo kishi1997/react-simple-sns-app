@@ -5,7 +5,6 @@ import Link from 'next/link';
 import styles from './page.module.css'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataState } from '../atom/state/userDataState';
-import { apiRequest } from '../axios/axiosInstance';
 import { useRouter } from 'next/navigation';
 import { USER_TOKEN_KEY } from '../storage/storage';
 import { flashMessageState } from '../atom/state/flashMessageState';
@@ -19,16 +18,10 @@ const MyPage = () => {
   const handleLogOut = async () => {
     const confirmLogOut = window.confirm("ログアウトしますか？");
     if (!confirmLogOut) return;
-      apiRequest.delete('/auth')
-        .then((response) => {
-          localStorage.removeItem(USER_TOKEN_KEY);
-          setUserData(null);
-          setFlashMessage("ログアウトしました");
-          router.push('/login');
-        })
-        .catch((error) => {
-          console.error(error);
-        })
+    localStorage.removeItem(USER_TOKEN_KEY);
+    setUserData(null);
+    setFlashMessage("ログアウトしました");
+    router.push('/login');
   }
   return (
     <div className={styles.container}>
