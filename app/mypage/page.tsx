@@ -33,7 +33,7 @@ const MyPage = () => {
         <span>id：{userData?.id}</span>
       </div>
       <div className={styles.link}>
-        <Link href="../login">プロフィールを編集</Link>
+        <Link href="../editProfile">プロフィールを編集</Link>
       </div>
       <div className={styles.btn}>
         <button onClick={handleLogOut}>ログアウトする</button>
