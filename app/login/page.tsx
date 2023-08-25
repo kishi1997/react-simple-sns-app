@@ -7,13 +7,16 @@ import { apiRequest } from '../axios/axiosInstance';
 import { validateEmail } from '../validation/email';
 import { setToken } from '../storage/storage';
 import { AsyncButton } from '../components/asyncButton';
+import { ErrorDialog } from '../components/errorDialog';
+import { errorDialogOpenState } from '../atom/state/errorDialogOpenState';
+import { useRecoilState } from 'recoil';
 
 const Login = () => {
     const router = useRouter();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
-    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+    const [errorDialogOpen, setErrorDialogOpen] = useRecoilState(errorDialogOpenState);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -39,10 +42,6 @@ const Login = () => {
             })
     }
 
-    const handleCloseErrorDialog = () => {
-        setErrorDialogOpen(false);
-    }
-
     const isFormValid = email.length > 0 && validateEmail(email) && password.length >= 8;
 
     return (
@@ -66,13 +65,7 @@ const Login = () => {
                     ログインする
                 </AsyncButton>
             </form>
-            {errorDialogOpen && (
-                <div className={styles.dialog}>
-                    <div>登録エラーが発生しました。</div>
-                    <div>{error}</div>
-                    <button onClick={handleCloseErrorDialog}>閉じる</button>
-                </div>
-            )}
+            <ErrorDialog errorDialogOpen={errorDialogOpen} error={error} />
         </div>
     )
 }

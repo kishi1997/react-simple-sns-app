@@ -8,16 +8,17 @@ import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { apiRequest } from './axios/axiosInstance'
 import { FlashMessage } from './components/flashMessage';
+import FooterNavigation from './components/footerNavigation';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export function LoginChecker ({children}: {children: React.ReactNode }) {
+export function LoginChecker({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const setUserData = useSetRecoilState(userDataState);
 
   useEffect(() => {
-    if(pathname === "/login" || pathname === "/register") return;
+    if (pathname === "/login" || pathname === "/register") return;
     apiRequest.get('/account')
       .then((response) => {
         const data = response.data;
@@ -45,6 +46,7 @@ export default function RootLayout({
           <body className={inter.className}>
             <FlashMessage />
             {children}
+            <FooterNavigation />
           </body>
         </html>
       </LoginChecker>
