@@ -41,7 +41,7 @@ const Post = () => {
       <form className={styles.form} onSubmit={createPost}>
         <div className={styles.form_container}>
             <textarea placeholder='投稿内容を140字以内で入力してください' className={styles.form_textarea} 
-                      onChange={handleChange} cols="30" rows="10" value={text}></textarea>
+                      onChange={handleChange} cols={30} rows={10} value={text}></textarea>
             <div>現在の文字数：{text.length}</div>
         </div>
         <AsyncButton onClick={createPost} isDisabled={!isFormValid}>
