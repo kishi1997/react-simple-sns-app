@@ -3,11 +3,18 @@ import React, { ChangeEvent, useState } from 'react'
 import styles from './page.module.css'
 import { apiRequest } from '../axios/axiosInstance';
 import { useRouter } from 'next/navigation';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { AsyncButton } from '../components/asyncButton';
+import { ErrorDialog } from '../components/errorDialog';
+import { errorDialogOpenState } from '../atom/state/errorDialogOpenState';
+import { flashMessageState } from '../atom/state/flashMessageState';
 
 const Post = () => {
   const router = useRouter();
   const [text, setText] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [errorDialogOpen, setErrorDialogOpen] = useRecoilState(errorDialogOpenState);
+  const setFlashMessage = useSetRecoilState(flashMessageState);
 
   const createPost = async () => {
     apiRequest.post('/posts', {
@@ -16,10 +23,12 @@ const Post = () => {
       }
     })
       .then((response) => {
+        setFlashMessage("投稿が完了しました。");
         router.push('../postList');
       })
       .catch((error) => {
-        console.error(error);
+        setError(error.message);
+        setErrorDialogOpen(true);
       })
   }
 
@@ -48,6 +57,7 @@ const Post = () => {
           投稿する
         </AsyncButton>
       </form>
+      <ErrorDialog errorDialogOpen={errorDialogOpen} error={error}/>
     </div>
   )
 }
