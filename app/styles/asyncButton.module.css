@@ -16,4 +16,5 @@
   }
   .form_btn button:disabled {
     opacity: .5;
+    cursor: none;
   }
