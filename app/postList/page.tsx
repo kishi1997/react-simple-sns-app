@@ -1,5 +1,5 @@
 'use client'
-import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
@@ -9,24 +9,24 @@ import { AsyncButton } from '../components/asyncButton';
 import FooterNavigation from '../components/footerNavigation';
 
 const PostList = () => {
-  const [comments, setComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<{[key:string]:string}>({});
   const [postList, setPostList] = useState<postData[]>([]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-    const newComments = [...comments]
-    newComments[index] = e.target.value;
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, postId: number) => {
+    const newComments = {...comments};
+    newComments[postId] = e.target.value;
     setComments(newComments);
   }
 
-  const addComment = async (postId: number, index: number) => {
+  const addComment = async (postId: number) => {
     apiRequest.post('/messages/via_post', {
-      "content": comments[index],
+      "content": comments[postId],
       "postId": postId
     })
       .then(response => {
         setComments(prevComments => {
-          const newComments = [...prevComments];
-          newComments[index] = "";
+          const newComments = {...prevComments};
+          newComments[postId] = "";
           return newComments;
         })
       })
@@ -60,9 +60,9 @@ const PostList = () => {
               <div>{post.body}</div>
               <div className={styles.postTime}>{new Date(post.createdAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}</div>
             </div>
-            <form className={styles.form} onSubmit={() => addComment(post.id, index)}>
-              <input onChange={(e) => handleChange(e, index)} value={comments[index] || ""} type="text" placeholder='コメントはこちらに入力してください。' />
-              <AsyncButton isDisabled={!comments[index] || comments[index].length < 1} onClick={() => addComment(post.id, index)}>send</AsyncButton>
+            <form className={styles.form} onSubmit={() => addComment(post.id)}>
+              <input onChange={(e) => handleChange(e, post.id)} value={comments[post.id] || ""} type="text" placeholder='コメントはこちらに入力してください。' />
+              <AsyncButton isDisabled={!comments[post.id] || comments[post.id].length < 1} onClick={() => addComment(post.id)}>send</AsyncButton>
             </form>
           </div>
         ))}
