@@ -11,16 +11,11 @@ import FooterNavigation from '../components/footerNavigation';
 const PostList = () => {
   const [comments, setComments] = useState<string[]>([]);
   const [postList, setPostList] = useState<postData[]>([]);
-  const [formValid, setFormValid] = useState<boolean[]>(Array(comments.length).fill(false));
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const newComments = [...comments]
     newComments[index] = e.target.value;
     setComments(newComments);
-
-    const newFormValid = [...formValid];
-    newFormValid[index] = e.target.value.length >= 1;
-    setFormValid(newFormValid);
   }
 
   const addComment = async (postId: number, index: number) => {
@@ -34,11 +29,6 @@ const PostList = () => {
           newComments[index] = "";
           return newComments;
         })
-        setFormValid(prevFormValid => {
-          const newFormValid = [...prevFormValid];
-          newFormValid[index] = false;
-          return newFormValid;
-        });
       })
       .catch(error => {
         console.error(error);
@@ -72,7 +62,7 @@ const PostList = () => {
             </div>
             <form className={styles.form} onSubmit={() => addComment(post.id, index)}>
               <input onChange={(e) => handleChange(e, index)} value={comments[index] || ""} type="text" placeholder='コメントはこちらに入力してください。' />
-              <AsyncButton isDisabled={!formValid[index]} onClick={() => addComment(post.id, index)}>send</AsyncButton>
+              <AsyncButton isDisabled={!comments[index] || comments[index].length < 1} onClick={() => addComment(post.id, index)}>send</AsyncButton>
             </form>
           </div>
         ))}
