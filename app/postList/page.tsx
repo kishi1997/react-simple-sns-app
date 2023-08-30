@@ -8,12 +8,11 @@ import { postData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
 
 const PostList = () => {
-  const [comments, setComments] = useState<{[key:string]:string}>({});
+  const [comments, setComments] = useState<{ [key: string]: string }>({});
   const [postList, setPostList] = useState<postData[]>([]);
-  const [allPostList, setAllPostList] = useState<postData[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, postId: number) => {
-    const newComments = {...comments};
+    const newComments = { ...comments };
     newComments[postId] = e.target.value;
     setComments(newComments);
   }
@@ -25,7 +24,7 @@ const PostList = () => {
     })
       .then(response => {
         setComments(prevComments => {
-          const newComments = {...prevComments};
+          const newComments = { ...prevComments };
           newComments[postId] = "";
           return newComments;
         })
@@ -35,28 +34,40 @@ const PostList = () => {
       });
   }
 
+  const loadNextPostList = async() => {
+    const nextPostListLength = postList.length;
+      apiRequest.get(`/posts?pagination[cursor]=${nextPostListLength}&pagination[size]=10&pagination[order]=ASC`)
+        .then((response) => {
+          setPostList((prevPostList) => {
+            const newPosts = response.data.posts.filter((post:postData) => !prevPostList.some((prevPost) => prevPost.id === post.id));
+            const newPostList = [
+              ...prevPostList,
+              ...newPosts,
+            ];
+            return newPostList;
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  }
+
   const postListContainer = useRef<HTMLDivElement>(null);
 
   const onScroll = () => {
     const el = postListContainer.current;
-    if(!el) return;
+    if (!el) return;
     const rate = el.scrollTop / (el.scrollHeight - el.clientHeight);
-    if(rate < 0.9 || postList.length === allPostList.length) return;
-    setPostList((prevPostList) => {
-      const newPostList = [
-        ...prevPostList,
-        ...allPostList.slice(prevPostList.length, prevPostList.length + 10),
-      ]
-      return newPostList;
-    });
-  }
+    if (rate > 0.9 && el.scrollTop > 0) {
+      loadNextPostList();
+    }
+  };
 
   useEffect(() => {
-    apiRequest.get('/posts')
+    apiRequest.get('/posts?pagination[cursor]=0&pagination[size]=10&pagination[order]=ASC')
       .then((response) => {
         const data = response.data;
-        setAllPostList(data.posts);
-        setPostList(data.posts.slice(0,10));
+        setPostList(data.posts);
       })
       .catch((error) => {
         console.error(error);
