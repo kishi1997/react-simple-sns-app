@@ -1,16 +1,16 @@
 'use client'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
 import { apiRequest } from '../axios/axiosInstance';
 import { postData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
-import FooterNavigation from '../components/footerNavigation';
 
 const PostList = () => {
   const [comments, setComments] = useState<{[key:string]:string}>({});
   const [postList, setPostList] = useState<postData[]>([]);
+  const [allPostList, setAllPostList] = useState<postData[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, postId: number) => {
     const newComments = {...comments};
@@ -35,11 +35,28 @@ const PostList = () => {
       });
   }
 
+  const postListContainer = useRef<HTMLDivElement>(null);
+
+  const onScroll = () => {
+    const el = postListContainer.current;
+    if(!el) return;
+    const rate = el.scrollTop / (el.scrollHeight - el.clientHeight);
+    if(rate < 0.9 || postList.length === allPostList.length) return;
+    setPostList((prevPostList) => {
+      const newPostList = [
+        ...prevPostList,
+        ...allPostList.slice(prevPostList.length, prevPostList.length + 10),
+      ]
+      return newPostList;
+    });
+  }
+
   useEffect(() => {
     apiRequest.get('/posts')
       .then((response) => {
-        const data = response.data.posts;
-        setPostList(data);
+        const data = response.data;
+        setAllPostList(data.posts);
+        setPostList(data.posts.slice(0,10));
       })
       .catch((error) => {
         console.error(error);
@@ -49,7 +66,8 @@ const PostList = () => {
   return (
     <div className={styles.container}>
       <h1>POST LIST</h1>
-      <div className={styles.postListContainer}>
+      <Link href={'../post'}>投稿を作成する</Link>
+      <div className={styles.postListContainer} ref={postListContainer} onScroll={onScroll}>
         {postList.length > 0 && postList.map((post, index) => (
           <div key={index} className={styles.post}>
             <div className={styles.userInfo}>
@@ -67,8 +85,6 @@ const PostList = () => {
           </div>
         ))}
       </div>
-      <Link href={'../post'}>投稿を作成する</Link>
-      <FooterNavigation></FooterNavigation>
     </div>
   )
 }

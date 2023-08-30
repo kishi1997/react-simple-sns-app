@@ -1,4 +1,5 @@
 .container {
+    height: 100vh;
     max-width: 480px;
     margin-inline: auto;
     padding: 80px 40px;
@@ -16,7 +17,6 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
-  max-height: 80vh;
   width: 100%;
   padding-right: 12px;
   overflow: hidden;
