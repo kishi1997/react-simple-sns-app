@@ -35,8 +35,16 @@ const PostList = () => {
   }
 
   const loadNextPostList = async() => {
-    const nextPostListLength = postList.length;
-      apiRequest.get(`/posts?pagination[cursor]=${nextPostListLength}&pagination[size]=10&pagination[order]=ASC`)
+  const nextPostListLength = postList.length;
+        apiRequest.get('/posts',{
+          params: {
+            pagination: {
+              cursor: nextPostListLength,
+              size: 10,
+              order: 'ASC'
+            }
+          }
+        })
         .then((response) => {
           setPostList((prevPostList) => {
             const newPosts = response.data.posts.filter((post:postData) => !prevPostList.some((prevPost) => prevPost.id === post.id));
@@ -64,7 +72,15 @@ const PostList = () => {
   };
 
   useEffect(() => {
-    apiRequest.get('/posts?pagination[cursor]=0&pagination[size]=10&pagination[order]=ASC')
+    apiRequest.get('/posts',{
+      params: {
+        pagination: {
+          cursor: 0,
+          size: 10,
+          order: 'ASC'
+        }
+      }
+    })
       .then((response) => {
         const data = response.data;
         setPostList(data.posts);
