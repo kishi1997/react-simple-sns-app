@@ -6,6 +6,7 @@ import styles from './page.module.css';
 import { apiRequest } from '../axios/axiosInstance';
 import { postData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
+import GetPosts from '../hooks/getPosts';
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
@@ -34,30 +35,31 @@ const PostList = () => {
       });
   }
 
-  const loadNextPostList = async() => {
-  const nextPostListLength = postList.length;
-        apiRequest.get('/posts',{
-          params: {
-            pagination: {
-              cursor: nextPostListLength,
-              size: 10,
-              order: 'ASC'
-            }
-          }
-        })
-        .then((response) => {
+  const loadNextPostList = async () => {
+    const nextPostListLength = postList.length;
+    const query = {
+      size: 10,
+      cursor: nextPostListLength,
+      order: "ASC"
+    }
+    async function setNextPostList() {
+      try {
+        const response = await GetPosts(query);
+        if(response) {
           setPostList((prevPostList) => {
-            const newPosts = response.data.posts.filter((post:postData) => !prevPostList.some((prevPost) => prevPost.id === post.id));
+            const nextPosts = response.filter((post: postData) => !prevPostList.some((prevPost) => prevPost.id === post.id));
             const newPostList = [
               ...prevPostList,
-              ...newPosts,
+              ...nextPosts,
             ];
             return newPostList;
           });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setNextPostList();
   }
 
   const postListContainer = useRef<HTMLDivElement>(null);
@@ -72,22 +74,22 @@ const PostList = () => {
   };
 
   useEffect(() => {
-    apiRequest.get('/posts',{
-      params: {
-        pagination: {
-          cursor: 0,
-          size: 10,
-          order: 'ASC'
+    const query = {
+      size: 10,
+      cursor: 0,
+      order: "ASC"
+    }
+    async function setInitialPostList() {
+      try {
+        const response = await GetPosts(query);
+        if(response) {
+          setPostList(response);
         }
-      }
-    })
-      .then((response) => {
-        const data = response.data;
-        setPostList(data.posts);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      })
+      }
+    }
+    setInitialPostList();
   }, []);
 
   return (
