@@ -6,7 +6,7 @@ import styles from './page.module.css';
 import { apiRequest } from '../axios/axiosInstance';
 import { postData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
-import GetPosts from '../hooks/getPosts';
+import { postFactory } from '../models/post_model';
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
@@ -36,16 +36,16 @@ const PostList = () => {
   }
 
   const loadNextPostList = async () => {
-    const nextPostListLength = postList.length;
-    const query = {
-      size: 10,
-      cursor: nextPostListLength,
-      order: "ASC"
-    }
     async function setNextPostList() {
+      const nextPostListLength = postList.length;
+      const query = {
+        size: 10,
+        cursor: nextPostListLength,
+        order: "ASC"
+      }
       try {
-        const response = await GetPosts(query);
-        if(response) {
+        const response = await postFactory().index(query);
+        if (response) {
           setPostList((prevPostList) => {
             const nextPosts = response.filter((post: postData) => !prevPostList.some((prevPost) => prevPost.id === post.id));
             const newPostList = [
@@ -81,8 +81,8 @@ const PostList = () => {
     }
     async function setInitialPostList() {
       try {
-        const response = await GetPosts(query);
-        if(response) {
+        const response = await postFactory().index(query);
+        if (response) {
           setPostList(response);
         }
       } catch (error) {
