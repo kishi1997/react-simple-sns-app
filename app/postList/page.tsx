@@ -36,31 +36,20 @@ const PostList = () => {
   }
 
   const loadNextPostList = async () => {
-    async function setNextPostList() {
-      const nextPostListLength = postList.length;
-      const query = {
-        size: 10,
-        cursor: nextPostListLength,
-        order: "ASC"
+    const nextPostListLength = postList.length;
+    const query = { size: 10, cursor: nextPostListLength };
+    try {
+      const response = await postFactory().index(query);
+      if (response) {
+        setPostList((prevPostList) => [
+          ...prevPostList,
+          ...response.filter((post) => !prevPostList.some((prevPost) => prevPost.id === post.id))
+        ]);
       }
-      try {
-        const response = await postFactory().index(query);
-        if (response) {
-          setPostList((prevPostList) => {
-            const nextPosts = response.filter((post: postData) => !prevPostList.some((prevPost) => prevPost.id === post.id));
-            const newPostList = [
-              ...prevPostList,
-              ...nextPosts,
-            ];
-            return newPostList;
-          });
-        }
-      } catch (error) {
-        console.error(error);
-      }
+    } catch (error) {
+      console.error(error);
     }
-    setNextPostList();
-  }
+  };
 
   const postListContainer = useRef<HTMLDivElement>(null);
 
@@ -74,22 +63,15 @@ const PostList = () => {
   };
 
   useEffect(() => {
-    const query = {
-      size: 10,
-      cursor: 0,
-      order: "ASC"
-    }
-    async function setInitialPostList() {
+    const query = { size: 10, cursor: 0 };
+    (async () => {
       try {
         const response = await postFactory().index(query);
-        if (response) {
-          setPostList(response);
-        }
+        response && setPostList(response);
       } catch (error) {
         console.error(error);
       }
-    }
-    setInitialPostList();
+    })();
   }, []);
 
   return (
