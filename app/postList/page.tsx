@@ -36,8 +36,8 @@ const PostList = () => {
   }
 
   const loadNextPostList = async () => {
-    const nextPostListLength = postList.length;
-    const query = { size: 10, cursor: nextPostListLength };
+    const lastPostId = postList[postList.length - 1].id;
+    const query = { size: 10, cursor: lastPostId };
     try {
       const response = await postFactory().index(query);
       if (response) {
