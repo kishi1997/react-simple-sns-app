@@ -1,19 +1,19 @@
 'use client'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
 import { apiRequest } from '../axios/axiosInstance';
 import { postData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
-import FooterNavigation from '../components/footerNavigation';
+import { postFactory } from '../models/post_model';
 
 const PostList = () => {
-  const [comments, setComments] = useState<{[key:string]:string}>({});
+  const [comments, setComments] = useState<{ [key: string]: string }>({});
   const [postList, setPostList] = useState<postData[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, postId: number) => {
-    const newComments = {...comments};
+    const newComments = { ...comments };
     newComments[postId] = e.target.value;
     setComments(newComments);
   }
@@ -25,7 +25,7 @@ const PostList = () => {
     })
       .then(response => {
         setComments(prevComments => {
-          const newComments = {...prevComments};
+          const newComments = { ...prevComments };
           newComments[postId] = "";
           return newComments;
         })
@@ -35,21 +35,50 @@ const PostList = () => {
       });
   }
 
+  const loadNextPostList = async () => {
+    const lastPostId = postList[postList.length - 1].id;
+    const query = { size: 10, cursor: lastPostId };
+    try {
+      const response = await postFactory().index(query);
+      if (response) {
+        setPostList((prevPostList) => [
+          ...prevPostList,
+          ...response.filter((post) => !prevPostList.some((prevPost) => prevPost.id === post.id))
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const postListContainer = useRef<HTMLDivElement>(null);
+
+  const onScroll = () => {
+    const el = postListContainer.current;
+    if (!el) return;
+    const rate = el.scrollTop / (el.scrollHeight - el.clientHeight);
+    if (rate > 0.9 && el.scrollTop > 0) {
+      loadNextPostList();
+    }
+  };
+
   useEffect(() => {
-    apiRequest.get('/posts')
-      .then((response) => {
-        const data = response.data.posts;
-        setPostList(data);
-      })
-      .catch((error) => {
+    const query = { size: 10, cursor: 0 };
+    (async () => {
+      try {
+        const response = await postFactory().index(query);
+        response && setPostList(response);
+      } catch (error) {
         console.error(error);
-      })
+      }
+    })();
   }, []);
 
   return (
     <div className={styles.container}>
       <h1>POST LIST</h1>
-      <div className={styles.postListContainer}>
+      <Link href={'../post'}>投稿を作成する</Link>
+      <div className={styles.postListContainer} ref={postListContainer} onScroll={onScroll}>
         {postList.length > 0 && postList.map((post, index) => (
           <div key={index} className={styles.post}>
             <div className={styles.userInfo}>
@@ -67,8 +96,6 @@ const PostList = () => {
           </div>
         ))}
       </div>
-      <Link href={'../post'}>投稿を作成する</Link>
-      <FooterNavigation></FooterNavigation>
     </div>
   )
 }
