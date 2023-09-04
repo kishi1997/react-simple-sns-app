@@ -1,17 +1,15 @@
 import { apiRequest } from "../axios/axiosInstance";
+import { getPostsParams } from "../types/params/getPostsParams";
 import { postData } from "../types/postData";
 
-export type Pagination = {
-  size: number,
-  cursor: number,
-}
 export type PostRepository = {
-  getPosts: (query: Pagination) => Promise<postData[]>;
+  getPosts: (query: getPostsParams) => Promise<postData[]>;
+  createPosts: (postContent: string) => Promise<void>;
 }
-const getPosts = async (query: Pagination): Promise<postData[]> => {
+const getPosts : PostRepository["getPosts"] = async (query: getPostsParams): Promise<postData[]> => {
   const response = await apiRequest.get('/posts', {
     params: {
-      pagination: {
+      Pagination: {
         size: query.size,
         cursor: query.cursor,
         order: "ASC"
@@ -20,7 +18,15 @@ const getPosts = async (query: Pagination): Promise<postData[]> => {
   });
   return response.data.posts;
 }
+const createPosts : PostRepository["createPosts"] = async (postContent: string) => {
+  await apiRequest.post('/posts', {
+    post: {
+      body: postContent,
+    }
+  });
+}
 
 export const postRepository: PostRepository = {
   getPosts,
-};
+  createPosts,
+}
