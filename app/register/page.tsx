@@ -39,7 +39,6 @@ export default function Register() {
         }
         try {
             const response = await userFactory().register(params);
-            console.log(response);
             setToken(response.token);
             router.push('/');
         }
