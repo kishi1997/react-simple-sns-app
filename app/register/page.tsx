@@ -10,6 +10,7 @@ import { AsyncButton } from '../components/asyncButton';
 import { ErrorDialog } from '../components/errorDialog';
 import { useRecoilState } from 'recoil';
 import { errorDialogOpenState } from '../atom/state/errorDialogOpenState';
+import { userFactory } from '../models/user_model';
 
 export default function Register() {
     const router = useRouter();
@@ -31,20 +32,21 @@ export default function Register() {
     }
 
     const handleSubmit = async () => {
-        apiRequest.post('/account', {
+        const params = {
             name: name,
             email: email,
             password: password,
-        })
-            .then((response) => {
-                const data = response.data;
-                setToken(data.token);
-                router.push('/');
-            })
-            .catch((error) => {
-                setError(error.message);
-                setErrorDialogOpen(true);
-            })
+        }
+        try {
+            const response = await userFactory().register(params);
+            console.log(response);
+            setToken(response.token);
+            router.push('/');
+        }
+        catch(error: any) {
+            setError(error.message);
+            setErrorDialogOpen(true);
+        }
     }
 
     const isFormValid = name.length > 0 && email.length > 0 && validateEmail(email) && password.length >= 8;
@@ -79,4 +81,3 @@ export default function Register() {
         </div>
     )
 }
-
