@@ -3,10 +3,10 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { apiRequest } from '../axios/axiosInstance';
 import { postData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
 import { postFactory } from '../models/post_model';
+import { apiRequest } from '../axios/axiosInstance';
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
@@ -39,7 +39,7 @@ const PostList = () => {
     const lastPostId = postList[postList.length - 1].id;
     const query = { size: 10, cursor: lastPostId };
     try {
-      const response = await postFactory().index(query);
+      const response = await postFactory().get(query);
       if (response) {
         setPostList((prevPostList) => [
           ...prevPostList,
@@ -66,7 +66,7 @@ const PostList = () => {
     const query = { size: 10, cursor: 0 };
     (async () => {
       try {
-        const response = await postFactory().index(query);
+        const response = await postFactory().get(query);
         response && setPostList(response);
       } catch (error) {
         console.error(error);
