@@ -2,14 +2,24 @@ import { apiRequest } from "../axios/axiosInstance";
 import { createAccountParams } from "../types/params/createAccountParams";
 import { editUserDataParams } from "../types/params/editUserDataParams";
 import { editUserIconParams } from "../types/params/editUserIconParams";
+import { loginAccountParams } from "../types/params/loginAccountParams";
 import { responseAccountData } from "../types/response/responseAccountData";
 import { responseUserData } from "../types/response/responseUserData";
 
 export type UserRepository = {
+    loginAccount: (params: loginAccountParams) => Promise<responseUserData>;
     createAccount: (params: createAccountParams) => Promise<responseAccountData>;
     getUserData: () => Promise<responseUserData>;
     editUserData: (params: editUserDataParams) => Promise<void>;
     editUserIcon: (params: editUserIconParams) => Promise<void>;
+}
+
+const loginAccount: UserRepository["loginAccount"] = async (params: loginAccountParams): Promise<responseUserData> => {
+    const response = await apiRequest.post('/auth', {
+        email: params.email,
+        password: params.password
+    });
+    return response;
 }
 
 const getUserData: UserRepository["getUserData"] = async (): Promise<responseUserData> => {
@@ -42,8 +52,9 @@ const editUserIcon: UserRepository["editUserIcon"] = async (params: editUserIcon
 }
 
 export const userRepository: UserRepository = {
-    createAccount,
+    loginAccount,
     getUserData,
+    createAccount,
     editUserData,
     editUserIcon
 }
