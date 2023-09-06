@@ -6,9 +6,9 @@ import { userDataState } from './atom/state/userDataState';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
-import { apiRequest } from './axios/axiosInstance'
 import { FlashMessage } from './components/flashMessage';
 import FooterNavigation from './components/footerNavigation';
+import { userFactory } from './models/user_model';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,17 +19,18 @@ export function LoginChecker({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (pathname === "/login" || pathname === "/register") return;
-    apiRequest.get('/account')
-      .then((response) => {
-        const data = response.data;
-        setUserData(data.user);
+    (async()=> {
+      try {
+        const response = await userFactory().get();
+        setUserData(response.data.user);
         if (Object.keys(response.data).length === 0) {
           router.push('/login');
         }
-      })
-      .catch((error) => {
-        router.push('/login');
-      })
+      }
+      catch (error) {
+        console.error(error);
+      }
+    })();
   }, [pathname]);
   return <>{children}</>;
 }

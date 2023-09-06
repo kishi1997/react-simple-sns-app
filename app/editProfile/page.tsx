@@ -2,13 +2,13 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
-import { apiRequest } from '../axios/axiosInstance';
 import { AsyncButton } from '../components/asyncButton';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataState } from '../atom/state/userDataState';
 import { flashMessageState } from '../atom/state/flashMessageState';
 import { ErrorDialog } from '../components/errorDialog';
 import { errorDialogOpenState } from '../atom/state/errorDialogOpenState';
+import { userFactory } from '../models/user_model';
 
 export default function EditProfile() {
     const router = useRouter();
@@ -29,20 +29,20 @@ export default function EditProfile() {
     };
 
     const editInfo = async () => {
-        const newUserData = JSON.stringify({
-            "name": name,
-            "email": userData?.email
-        });
         try {
-            await apiRequest.patch('/account/profile', newUserData)
+            if(!userData) return;
+            const params = {
+                "name": name,
+                "email": userData.email
+            };
+            await userFactory().editData(params);
             if (newIconImageUrl) {
                 const newIcon = new FormData();
                 newIcon.append('file', newIconImageUrl);
-                await apiRequest.patch('/account/icon_image', newIcon, {
-                    headers: {
-                        "content-type": "multipart/form-data"
-                    }
-                })
+                const params = {
+                    newIcon: newIcon,
+                }
+                await userFactory().editIcon(params);
             }
             router.push('../mypage');
             setFlashMessage("変更が完了しました。");
