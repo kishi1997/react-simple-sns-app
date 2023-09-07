@@ -6,7 +6,7 @@ import styles from './page.module.css';
 import { postData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
 import { postFactory } from '../models/post_model';
-import { apiRequest } from '../axios/axiosInstance';
+import { messageFactory } from '../models/message_model';
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
@@ -19,20 +19,21 @@ const PostList = () => {
   }
 
   const addComment = async (postId: number) => {
-    apiRequest.post('/messages/via_post', {
-      "content": comments[postId],
-      "postId": postId
-    })
-      .then(response => {
-        setComments(prevComments => {
-          const newComments = { ...prevComments };
-          newComments[postId] = "";
-          return newComments;
-        })
+    const params = {
+      comments: comments,
+      postId: postId
+    }
+    try {
+      await messageFactory().addComment(params);
+      setComments(prevComments => {
+        const newComments = { ...prevComments };
+        newComments[postId] = "";
+        return newComments;
       })
-      .catch(error => {
-        console.error(error);
-      });
+    }
+    catch(error) {
+      console.error(error);
+    }
   }
 
   const loadNextPostList = async () => {

@@ -3,13 +3,13 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { apiRequest } from '../axios/axiosInstance';
 import { validateEmail } from '../validation/email';
 import { setToken } from '../storage/storage';
 import { AsyncButton } from '../components/asyncButton';
 import { ErrorDialog } from '../components/errorDialog';
 import { errorDialogOpenState } from '../atom/state/errorDialogOpenState';
 import { useRecoilState } from 'recoil';
+import { userFactory } from '../models/user_model';
 
 const Login = () => {
     const router = useRouter();
@@ -27,19 +27,20 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
-        apiRequest.post('./auth', {
+        const params = {
             email: email,
             password: password
-        })
-            .then((response) => {
-                const data = response.data;
-                setToken(data.token);
-                router.push('/')
-            })
-            .catch((error) => {
-                setErrorDialogOpen(true);
-                setError(error.data.message);
-            })
+        }
+        try {
+            const response = await userFactory().login(params);
+            setToken(response.data.token);
+            router.push('/')
+        }
+        catch(error: any) {
+            setErrorDialogOpen(true);
+            setError(error.message);
+
+        }
     }
 
     const isFormValid = email.length > 0 && validateEmail(email) && password.length >= 8;
