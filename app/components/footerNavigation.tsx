@@ -25,7 +25,7 @@ const FooterNavigation = () => {
         <footer className={styles.container}>
           <Link href={'../postList'}><Image alt="ポストリストアイコン" width={30} height={30} src={"./icon/icon_postList.svg"} /></Link>
           <Link href={'/'}><Image alt="ホームアイコン" width={30} height={30} src={"./icon/icon_home.svg"} /></Link>
-          <Link href={'../mypage'}><Image alt="メッセージアイコン" width={30} height={30} src={"./icon/icon_message.svg"} /></Link>
+          <Link href={'../chatList'}><Image alt="メッセージアイコン" width={30} height={30} src={"./icon/icon_message.svg"} /></Link>
           <Link href={'../mypage'}><Image alt="プロフィール画像" width={30} height={30} src={userData?.iconImageUrl || "./icon/default_profile_icon.svg"} /></Link>
         </footer>
       )}

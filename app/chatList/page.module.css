@@ -1,0 +1,48 @@
+.container {
+    height: 100vh;
+    max-width: 480px;
+    margin-inline: auto;
+    padding: 80px 40px 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+    word-break: break-all;
+  }
+  .title {
+    font-size: 28px;
+  }
+  .chatListContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 300px;
+    padding-right: 12px;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
+  .chat {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .chatUserInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .chatUserInfo img {
+    border-radius: 50%;
+  }
+  .chatBody {
+    padding: 20px 8px;
+    margin: 20px 0;
+    border-radius: 4px;
+    background: #151515;
+  }
+  .chatTime {
+    font-size: 12px;
+    text-align: right;
+    margin: 32px 0 0 auto;
+  }

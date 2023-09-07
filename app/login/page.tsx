@@ -39,7 +39,6 @@ const Login = () => {
         catch(error: any) {
             setErrorDialogOpen(true);
             setError(error.message);
-
         }
     }
 
