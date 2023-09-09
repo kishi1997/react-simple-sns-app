@@ -7,6 +7,7 @@ import { postData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
 import { postFactory } from '../models/post_model';
 import { messageFactory } from '../models/message_model';
+import { formatDateJapanTime } from '../utils/dateUtils/dateUtils';
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
@@ -88,7 +89,9 @@ const PostList = () => {
             </div>
             <div className={styles.postBody}>
               <div>{post.body}</div>
-              <div className={styles.postTime}>{new Date(post.createdAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}</div>
+              <div className={styles.postTime}>
+                {formatDateJapanTime(post.createdAt)}
+              </div>
             </div>
             <form className={styles.form} onSubmit={() => addComment(post.id)}>
               <input onChange={(e) => handleChange(e, post.id)} value={comments[post.id] || ""} type="text" placeholder='コメントはこちらに入力してください。' />

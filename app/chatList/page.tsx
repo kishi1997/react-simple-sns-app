@@ -4,6 +4,7 @@ import Image from 'next/image';
 import styles from './page.module.css';
 import { chatData } from '../types/chatData';
 import { roomsFactory } from '../models/rooms_model';
+import { formatDateJapanTime } from '../utils/dateUtils/dateUtils';
 
 const ChatList = () => {
   const [chatList, setChatList] = useState<chatData[]>([]);
@@ -32,7 +33,9 @@ const ChatList = () => {
             </div>
             <div className={styles.chatBody}>
               <div>{chat.messages[0].content.slice(0, 10)}</div>
-              <div className={styles.chatTime}>{new Date(chat?.messages[0].createdAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}</div>
+              <div className={styles.chatTime}>
+                { formatDateJapanTime(chat?.messages[0].createdAt)}
+              </div>
             </div>
           </div>
         ))}
