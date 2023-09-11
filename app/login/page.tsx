@@ -3,7 +3,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { validateEmail } from '../validation/email';
+import { validateEmail } from '../utils/validateUtils/emailUtils';
 import { setToken } from '../storage/storage';
 import { AsyncButton } from '../components/asyncButton';
 import { ErrorDialog } from '../components/errorDialog';
@@ -39,7 +39,6 @@ const Login = () => {
         catch(error: any) {
             setErrorDialogOpen(true);
             setError(error.message);
-
         }
     }
 
