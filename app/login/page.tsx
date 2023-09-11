@@ -4,7 +4,7 @@ import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { validateEmail } from '../utils/validateUtils/emailUtils';
-import { setToken } from '../storage/storage';
+import { setToken } from '../storage/tokenStorage';
 import { AsyncButton } from '../components/asyncButton';
 import { ErrorDialog } from '../components/errorDialog';
 import { errorDialogOpenState } from '../atom/state/errorDialogOpenState';

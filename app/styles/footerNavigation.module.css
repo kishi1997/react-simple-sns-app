@@ -7,7 +7,7 @@
     left: 0;
     display: flex;
     justify-content: space-between;
-    padding: 40px;
+    padding: 20px 40px;
     background: #000000;
 }
 .container a:last-child img {

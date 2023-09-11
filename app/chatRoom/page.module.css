@@ -1,0 +1,14 @@
+.container {
+    max-width: 480px;
+    margin-inline: auto;
+    padding: 80px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+    word-break: break-all;
+  }
+  .title {
+    font-size: 28px;
+  }
