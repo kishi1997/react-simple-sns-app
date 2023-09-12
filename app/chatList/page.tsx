@@ -6,15 +6,13 @@ import { chatData } from '../types/chatData';
 import { roomsFactory } from '../models/rooms_model';
 import { formatDateJapanTime } from '../utils/dateUtils/dateUtils';
 import { useRouter } from 'next/navigation';
-import { setRoomId } from '../storage/roomIdStorage';
 
 const ChatList = () => {
   const router = useRouter();
   const [chatList, setChatList] = useState<chatData[]>([]);
 
   const moveChatRoom = async(chatId:string) => {
-    setRoomId(chatId);
-    router.push('/chatRoom');
+    router.push(`/chatRoom?id=${chatId}`);
   }
 
   useEffect(() => {
