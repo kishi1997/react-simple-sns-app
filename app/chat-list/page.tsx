@@ -13,7 +13,7 @@ const ChatList = () => {
 
   const moveChatRoom = async(chatId:string) => {
     const id = chatId;
-    router.push(`/chatRoom/${id}`);
+    router.push(`/chat-list/${id}`);
   }
 
   useEffect(() => {
