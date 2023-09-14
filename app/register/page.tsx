@@ -3,7 +3,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { setToken } from '../storage/storage';
+import { setToken } from '../storage/tokenStorage';
 import { validateEmail } from '../utils/validateUtils/emailUtils';
 import { AsyncButton } from '../components/asyncButton';
 import { ErrorDialog } from '../components/errorDialog';

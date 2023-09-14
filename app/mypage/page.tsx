@@ -6,7 +6,7 @@ import styles from './page.module.css'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataState } from '../atom/state/userDataState';
 import { useRouter } from 'next/navigation';
-import { USER_TOKEN_KEY } from '../storage/storage';
+import { USER_TOKEN_KEY } from '../storage/tokenStorage';
 import { flashMessageState } from '../atom/state/flashMessageState';
 
 const MyPage = () => {

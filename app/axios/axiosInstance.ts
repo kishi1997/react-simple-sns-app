@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken } from '../storage/storage';
+import { getToken } from '../storage/tokenStorage';
 
 
 export const apiRequest = axios.create({
