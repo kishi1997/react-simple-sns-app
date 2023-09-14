@@ -12,8 +12,7 @@ const ChatList = () => {
   const [chatList, setChatList] = useState<chatData[]>([]);
 
   const moveChatRoom = async(chatId:string) => {
-    const id = chatId;
-    router.push(`/chat-list/${id}`);
+    router.push(`/chat-list/${chatId}`);
   }
 
   useEffect(() => {
