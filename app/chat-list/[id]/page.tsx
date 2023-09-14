@@ -19,8 +19,6 @@ const ChatRoom = () => {
             try {
                 const response = await messageFactory().getChat(paramsId);
                 setChat(response);
-                console.log(userData);
-                console.log(response);
             }
             catch (error) {
                 console.error(error);
