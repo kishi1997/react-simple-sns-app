@@ -3,19 +3,19 @@ import { chatRoomData } from "../types/chatRoomData";
 import { commentDataParams } from "../types/params/commentDataParams";
 
 export type MessageRepository = {
-    getChat: (params: string) => Promise<chatRoomData[]>;
-    addComment: (params: commentDataParams) => Promise<void>;
+    getChat: (roomId: string) => Promise<chatRoomData[]>;
+    addComment: (commentData: commentDataParams) => Promise<void>;
 }
 
-const addComment : MessageRepository["addComment"] = async(params: commentDataParams) => {
+const addComment : MessageRepository["addComment"] = async(commentData: commentDataParams) => {
     await apiRequest.post('/messages/via_post', {
-      content: params.comments[params.postId],
-      postId: params.postId
+      content: commentData.comments[commentData.postId],
+      postId: commentData.postId
     })
 }
 
-const getChat : MessageRepository["getChat"] = async(params: string):Promise<chatRoomData[]> => {
-    const response = await apiRequest.get(`/messages/?roomId=${params}`);
+const getChat : MessageRepository["getChat"] = async(roomId: string):Promise<chatRoomData[]> => {
+    const response = await apiRequest.get(`/messages/?roomId=${roomId}`);
     return response.data.messages;
 }
 

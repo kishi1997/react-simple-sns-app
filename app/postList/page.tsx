@@ -20,12 +20,12 @@ const PostList = () => {
   }
 
   const addComment = async (postId: number) => {
-    const params = {
+    const commentData = {
       comments: comments,
       postId: postId
     }
     try {
-      await messageFactory().addComment(params);
+      await messageFactory().addComment(commentData);
       setComments(prevComments => {
         const newComments = { ...prevComments };
         newComments[postId] = "";

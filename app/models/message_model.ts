@@ -9,8 +9,8 @@ export const messageFactory = () => {
         addComment: async(params: commentDataParams) => {
             await repository.addComment(params);
         },
-        getChat: async(params: string):Promise<chatRoomData[]> => {
-            const response = await repository.getChat(params);
+        getChat: async(roomid: string):Promise<chatRoomData[]> => {
+            const response = await repository.getChat(roomid);
             return response;
 
         }
