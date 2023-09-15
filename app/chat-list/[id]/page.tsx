@@ -36,7 +36,7 @@ const ChatRoom = () => {
     useEffect(() => {
         (async () => {
             try {
-                const chatData = await messageFactory().getChat(paramsId);
+                const chatData = await messageFactory().getChat(roomId);
                 setChat(chatData);
             }
             catch (error) {
