@@ -12,7 +12,7 @@ import { roomsFactory } from '@/app/models/rooms_model';
 
 const ChatRoom = () => {
     const params = useParams();
-    const paramsId = Array.isArray(params) ? params[0] : params.id;
+    const roomId = Array.isArray(params) ? params[0] : params.id;
     const [chat, setChat] = useState<chatRoomData[]>([]);
     const [chatPartnerName, setchatPartnerName] = useState<string>("");
     const userData = useRecoilValue(userDataState);
@@ -21,7 +21,7 @@ const ChatRoom = () => {
     useEffect(() => {
         (async () => {
             try {
-                const roomUsersData = await roomsFactory().getRoomData(paramsId);
+                const roomUsersData = await roomsFactory().getRoomData(roomId);
                 const chatPartner = roomUsersData.find(user => user.userId !== currentUserId);
                 if(chatPartner) {
                     setchatPartnerName(chatPartner.user.name);
