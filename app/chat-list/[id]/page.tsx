@@ -14,7 +14,7 @@ const ChatRoom = () => {
     const params = useParams();
     const paramsId = Array.isArray(params) ? params[0] : params.id;
     const [chat, setChat] = useState<chatRoomData[]>([]);
-    const [opponentUserName, setOpponentUserName] = useState<string>("");
+    const [chatPartnerName, setchatPartnerName] = useState<string>("");
     const userData = useRecoilValue(userDataState);
     const currentUserId = userData?.id;
 
@@ -22,9 +22,9 @@ const ChatRoom = () => {
         (async () => {
             try {
                 const roomUsersData = await roomsFactory().getRoomData(paramsId);
-                const opponentUser = roomUsersData.find(user => user.userId !== currentUserId);
-                if(opponentUser) {
-                    setOpponentUserName(opponentUser.user.name);
+                const chatPartner = roomUsersData.find(user => user.userId !== currentUserId);
+                if(chatPartner) {
+                    setchatPartnerName(chatPartner.user.name);
                 }
             }
             catch (error) {
@@ -48,7 +48,7 @@ const ChatRoom = () => {
     return (
         <div className={styles.container}>
             <h1>CHAT ROOM</h1>
-            {opponentUserName && <h2>{opponentUserName}</h2>}
+            {chatPartnerName && <h2>{chatPartnerName}</h2>}
             {userData && chat.length > 0 && chat.slice().reverse().map((item, index) => (
                 <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
                     {item.user.id !== userData.id &&

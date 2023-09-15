@@ -4,15 +4,15 @@ import { roomUser } from "../types/response/responseRoomData";
 
 export type RoomsRepository = {
  getChatList:() => Promise<chatData[]>;
- getRoomData:(params: string) => Promise<roomUser[]>;
+ getRoomData:(roomId: string) => Promise<roomUser[]>;
 }
 
 const getChatList:RoomsRepository["getChatList"] = async():Promise<chatData[]> => {
     const response = await apiRequest.get('/rooms');
     return response.data.rooms;
 }
-const getRoomData:RoomsRepository["getRoomData"] = async(params: string):Promise<roomUser[]> => {
-    const response = await apiRequest.get(`/rooms/${params}`);
+const getRoomData:RoomsRepository["getRoomData"] = async(roomId: string):Promise<roomUser[]> => {
+    const response = await apiRequest.get(`/rooms/${roomId}`);
     return response.data.room.roomUsers;
 }
 

@@ -9,8 +9,8 @@ export const roomsFactory = () => {
             const response = await repository.getChatList();
             return response;
         },
-        getRoomData: async(params:string):Promise<roomUser[]> => {
-            const response = await repository.getRoomData(params);
+        getRoomData: async(roomId:string):Promise<roomUser[]> => {
+            const response = await repository.getRoomData(roomId);
             return response;
         }
     }
