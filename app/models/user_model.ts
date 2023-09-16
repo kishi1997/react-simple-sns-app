@@ -9,23 +9,23 @@ import { responseUserData } from "../types/response/responseUserData";
 export const userFactory = () => {
     const repository = userRepository;
     return {
-        login: async(params: loginAccountParams):Promise<responseUserData>=>{
-            const response = await repository.loginAccount(params);
+        login: async(loginInfo: loginAccountParams):Promise<responseUserData>=>{
+            const response = await repository.loginAccount(loginInfo);
             return response;
         },
-        register: async(params:createAccountParams):Promise<responseAccountData>=>{
-            const response = await repository.createAccount(params);
+        register: async(accountInfo:createAccountParams):Promise<responseAccountData>=>{
+            const response = await repository.createAccount(accountInfo);
             return response;
         },
         get: async():Promise<responseUserData> => {
             const response = await repository.getUserData();
             return response;
         },
-        editData: async(params: editUserDataParams) => {
-            await repository.editUserData(params);
+        editData: async(editUserInfo: editUserDataParams) => {
+            await repository.editUserData(editUserInfo);
         },
-        editIcon: async(params: editUserIconParams) => {
-            await repository.editUserIcon(params);
+        editIcon: async(editIconInfo: editUserIconParams) => {
+            await repository.editUserIcon(editIconInfo);
         }
     }
 }

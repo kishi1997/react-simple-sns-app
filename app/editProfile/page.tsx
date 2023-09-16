@@ -31,18 +31,18 @@ export default function EditProfile() {
     const editInfo = async () => {
         try {
             if(!userData) return;
-            const params = {
+            const editUserInfo = {
                 "name": name,
                 "email": userData.email
             };
-            await userFactory().editData(params);
+            await userFactory().editData(editUserInfo);
             if (newIconImageUrl) {
                 const newIcon = new FormData();
                 newIcon.append('file', newIconImageUrl);
-                const params = {
+                const editIconInfo = {
                     newIcon: newIcon,
                 }
-                await userFactory().editIcon(params);
+                await userFactory().editIcon(editIconInfo);
             }
             router.push('../mypage');
             setFlashMessage("変更が完了しました。");
