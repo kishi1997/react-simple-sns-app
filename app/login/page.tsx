@@ -27,12 +27,12 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
-        const params = {
+        const loginInfo = {
             email: email,
             password: password
         }
         try {
-            const response = await userFactory().login(params);
+            const response = await userFactory().login(loginInfo);
             setToken(response.data.token);
             router.push('/')
         }

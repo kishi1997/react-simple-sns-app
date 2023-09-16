@@ -31,13 +31,13 @@ export default function Register() {
     }
 
     const handleSubmit = async () => {
-        const params = {
+        const accountInfo = {
             name: name,
             email: email,
             password: password,
         }
         try {
-            const response = await userFactory().register(params);
+            const response = await userFactory().register(accountInfo);
             setToken(response.token);
             router.push('/');
         }
