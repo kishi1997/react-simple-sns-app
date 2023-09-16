@@ -38,8 +38,8 @@ const createAccount: UserRepository["createAccount"] = async (accountInfo: creat
 
 const editUserData: UserRepository["editUserData"] = async (editUserInfo: editUserDataParams) => {
     await apiRequest.patch('/account/profile', {
-        name: editInfo.name,
-        email: editInfo.email
+        name: editUserInfo.name,
+        email: editUserInfo.email
     });
 }
 
