@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
 import { useRecoilValue } from 'recoil';
@@ -9,6 +9,7 @@ import { messageFactory } from '@/app/models/message_model';
 import { chatRoomData } from '@/app/types/chatRoomData';
 import { formatDateJapanTime } from '@/app/utils/dateUtils/dateUtils';
 import { roomsFactory } from '@/app/models/rooms_model';
+import { AsyncButton } from '@/app/components/asyncButton';
 
 const ChatRoom = () => {
     const params = useParams();
@@ -17,13 +18,35 @@ const ChatRoom = () => {
     const [chatPartnerName, setchatPartnerName] = useState<string>("");
     const userData = useRecoilValue(userDataState);
     const currentUserId = userData?.id;
+    const [message, setMessage] = useState<string>("");
+
+    const sendChat = async () => {
+        try {
+            const sendChatData = {
+                content: message,
+                roomId: roomId
+            }
+            const response = await messageFactory().sendChat(sendChatData);
+            setMessage("");
+            setChat((prevChat) => {
+                const newChat = [response, ...prevChat]
+                return newChat;
+            })
+        }
+        catch(error) {
+            console.error(error);
+        }
+    }
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setMessage(e.target.value);
+    }
 
     useEffect(() => {
         (async () => {
             try {
                 const roomUsersData = await roomsFactory().getRoomData(roomId);
                 const chatPartner = roomUsersData.find(user => user.userId !== currentUserId);
-                if(chatPartner) {
+                if (chatPartner) {
                     setchatPartnerName(chatPartner.user.name);
                 }
             }
@@ -32,7 +55,7 @@ const ChatRoom = () => {
             }
         })();
     }, []);
-    
+
     useEffect(() => {
         (async () => {
             try {
@@ -44,6 +67,8 @@ const ChatRoom = () => {
             }
         })();
     }, []);
+
+    const isFormValid = 0 < message.length;
 
     return (
         <div className={styles.container}>
@@ -59,6 +84,12 @@ const ChatRoom = () => {
                     <div className={styles.time}>{formatDateJapanTime(item.createdAt)}</div>
                 </div>
             ))}
+            <form onSubmit={sendChat} className={styles.form}>
+                <input value={message} onChange={handleChange} type="text" />
+                <AsyncButton onClick={sendChat} isDisabled={!isFormValid}>
+                    送信
+                </AsyncButton>
+            </form>
         </div >
     )
 }
