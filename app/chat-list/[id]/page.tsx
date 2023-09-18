@@ -20,9 +20,7 @@ const ChatRoom = () => {
     const currentUserId = userData?.id;
     const [message, setMessage] = useState<string>("");
     const chatContainerRef = useRef<null | HTMLDivElement>(null);
-    const chatItemRef = useRef<null | HTMLDivElement>(null);
     const chatContainer = chatContainerRef.current;
-    const chatItem = chatItemRef.current;
 
     const sendChat = async () => {
         try {
@@ -87,7 +85,7 @@ const ChatRoom = () => {
             {chatPartnerName && <h2>{chatPartnerName}</h2>}
             <div className={styles.chatContainer} ref={chatContainerRef} >
                 {userData && chat.length > 0 && chat.slice().reverse().map((item, index) => (
-                    <div key={index} ref={chatItemRef} className={item.user.id !== userData.id ? styles.left : styles.right}>
+                    <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
                         {item.user.id !== userData.id &&
                             <Image width={20} height={20} alt="アイコン画像" src={item.user.iconImageUrl || "/icon/default_profile_icon.svg"} />
                         }
