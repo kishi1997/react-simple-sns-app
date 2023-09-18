@@ -1,10 +1,12 @@
 import { apiRequest } from "../axios/axiosInstance";
 import { chatRoomData } from "../types/chatRoomData";
 import { commentDataParams } from "../types/params/commentDataParams";
+import { sendChatDataParams } from "../types/params/sendChatDataParams";
 
 export type MessageRepository = {
-    getChat: (roomId: string) => Promise<chatRoomData[]>;
     addComment: (commentData: commentDataParams) => Promise<void>;
+    getChat: (roomId: string) => Promise<chatRoomData[]>;
+    sendChat: (sendChatData: sendChatDataParams) => Promise<chatRoomData>;
 }
 
 const addComment : MessageRepository["addComment"] = async(commentData: commentDataParams) => {
@@ -19,7 +21,16 @@ const getChat : MessageRepository["getChat"] = async(roomId: string):Promise<cha
     return response.data.messages;
 }
 
+const sendChat : MessageRepository["sendChat"] = async(sendChatData : sendChatDataParams):Promise<chatRoomData> => {
+    const response = await apiRequest.post('/messages/',{
+        content:sendChatData.content,
+        roomId:sendChatData.roomId
+    });
+    return response.data.message;
+}
+
 export const messageRepository: MessageRepository = {
     addComment,
-    getChat
+    getChat,
+    sendChat
 }
