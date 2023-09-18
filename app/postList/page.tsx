@@ -65,10 +65,10 @@ const PostList = () => {
   };
 
   useEffect(() => {
-    const query = { size: 10, cursor: 0 };
+    const paginationData = { size: 10, cursor: 0 };
     (async () => {
       try {
-        const response = await postFactory().get(query);
+        const response = await postFactory().get(paginationData);
         response && setPostList(response);
       } catch (error) {
         console.error(error);

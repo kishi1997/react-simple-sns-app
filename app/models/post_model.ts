@@ -1,12 +1,12 @@
 import { postRepository } from "../repositories/post_repository";
-import { getPostsParams } from "../types/params/getPostsParams";
+import { paginationParams } from "../types/params/paginationParams";
 import { postData } from "../types/postData";
 
 export const postFactory = () => {
     const repository = postRepository;
     return {
-      get: async (query: getPostsParams): Promise<postData[]> => {
-        const response = await repository.getPosts(query);
+      get: async (paginationData: paginationParams): Promise<postData[]> => {
+        const response = await repository.getPosts(paginationData);
         return response;
       },
       post: async (postContent: string) => {
