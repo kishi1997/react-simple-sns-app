@@ -1,4 +1,4 @@
-export type getPostsParams = {
+export type paginationParams = {
     size: number,
     cursor: number
   }
