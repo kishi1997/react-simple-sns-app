@@ -1,5 +1,6 @@
 .container {
   max-width: 480px;
+  height: 100vh;
   margin-inline: auto;
   padding: 80px 40px 120px;
   display: flex;
@@ -11,6 +12,14 @@
 }
 .title {
   font-size: 28px;
+}
+.chatContainer {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 300px;
+  padding-right: 12px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 .right, .left {
 display: flex;
@@ -31,6 +40,7 @@ color: grey;
 border: 1px solid grey;
 padding: 10px;
 border-radius: 10px;
+font-size: 12px;
 }
 .time {
 font-size: 10px;

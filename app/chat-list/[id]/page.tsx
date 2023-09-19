@@ -1,5 +1,5 @@
 'use client'
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
 import { useRecoilValue } from 'recoil';
@@ -33,7 +33,7 @@ const ChatRoom = () => {
                 return newChat;
             })
         }
-        catch(error) {
+        catch (error) {
             console.error(error);
         }
     }
@@ -57,9 +57,10 @@ const ChatRoom = () => {
     }, []);
 
     useEffect(() => {
+        const paginationData = { size: 10, cursor: null };
         (async () => {
             try {
-                const chatData = await messageFactory().getChat(roomId);
+                const chatData = await messageFactory().getChat(roomId, paginationData);
                 setChat(chatData);
             }
             catch (error) {
@@ -74,16 +75,18 @@ const ChatRoom = () => {
         <div className={styles.container}>
             <h1>CHAT ROOM</h1>
             {chatPartnerName && <h2>{chatPartnerName}</h2>}
-            {userData && chat.length > 0 && chat.slice().reverse().map((item, index) => (
-                <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
-                    {item.user.id !== userData.id &&
-                        <Image width={20} height={20} alt="アイコン画像" src={item.user.iconImageUrl || "/icon/default_profile_icon.svg"} />
-                    }
-                    {item.post && <div className={styles.post}>{item.post.body}</div>}
-                    <div>{item.content}</div>
-                    <div className={styles.time}>{formatDateJapanTime(item.createdAt)}</div>
-                </div>
-            ))}
+            <div className={styles.chatContainer} >
+                {userData && chat.length > 0 && chat.map((item, index) => (
+                    <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
+                        {item.user.id !== userData.id &&
+                            <Image width={20} height={20} alt="アイコン画像" src={item.user.iconImageUrl || "/icon/default_profile_icon.svg"} />
+                        }
+                        {item.post && <div className={styles.post}>{item.post.body}</div>}
+                        <div>{item.content}</div>
+                        <div className={styles.time}>{formatDateJapanTime(item.createdAt)}</div>
+                    </div>
+                ))}
+            </div>
             <form onSubmit={sendChat} className={styles.form}>
                 <input value={message} onChange={handleChange} type="text" />
                 <AsyncButton onClick={sendChat} isDisabled={!isFormValid}>
