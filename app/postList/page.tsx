@@ -41,9 +41,9 @@ const PostList = () => {
 
   const loadNextPostList = async () => {
     const lastPostId = postList[postList.length - 1].id;
-    const query = { size: 10, cursor: lastPostId };
+    const paginationData = { size: 10, cursor: lastPostId };
     try {
-      const response = await postFactory().get(query);
+      const response = await postFactory().get(paginationData);
       if (response) {
         setPostList((prevPostList) => [
           ...prevPostList,
