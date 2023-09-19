@@ -16,9 +16,11 @@ const ChatRoom = () => {
     const roomId = Array.isArray(params) ? params[0] : params.id;
     const [chat, setChat] = useState<chatRoomData[]>([]);
     const [chatPartnerName, setchatPartnerName] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
     const userData = useRecoilValue(userDataState);
     const currentUserId = userData?.id;
-    const [message, setMessage] = useState<string>("");
+    const chatContainerRef = useRef<null | HTMLDivElement>(null);
+    const chatContainer = chatContainerRef.current;
 
     const sendChat = async () => {
         try {
@@ -40,6 +42,30 @@ const ChatRoom = () => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value);
     }
+
+    const loadPreviouseChat = async () => {
+        const lastChatId = chat[chat.length - 1].id;
+        const paginationData = { size: 5, cursor: lastChatId };
+        try {
+            const response = await messageFactory().getChat(roomId, paginationData);
+            if (response && response.length > 0) {
+                setChat((prevChat) => [
+                    ...prevChat,
+                    ...response.filter((chat) => !prevChat.some((prevChat) => prevChat.id === chat.id)),
+                ]);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const onScroll = () => {
+        if (!chatContainer) return;
+        const rate = chatContainer.scrollTop / (chatContainer.scrollHeight - chatContainer.clientHeight);
+        if (rate < -0.9) {
+            loadPreviouseChat();
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -75,7 +101,7 @@ const ChatRoom = () => {
         <div className={styles.container}>
             <h1>CHAT ROOM</h1>
             {chatPartnerName && <h2>{chatPartnerName}</h2>}
-            <div className={styles.chatContainer} >
+            <div className={styles.chatContainer} ref={chatContainerRef} onScroll={onScroll}>
                 {userData && chat.length > 0 && chat.map((item, index) => (
                     <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
                         {item.user.id !== userData.id &&
