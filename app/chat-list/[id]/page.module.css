@@ -15,7 +15,7 @@
 }
 .chatContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   width: 300px;
   padding-right: 12px;
   overflow: hidden;
@@ -40,6 +40,7 @@ color: grey;
 border: 1px solid grey;
 padding: 10px;
 border-radius: 10px;
+font-size: 12px;
 }
 .time {
 font-size: 10px;

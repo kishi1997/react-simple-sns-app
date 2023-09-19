@@ -19,8 +19,6 @@ const ChatRoom = () => {
     const userData = useRecoilValue(userDataState);
     const currentUserId = userData?.id;
     const [message, setMessage] = useState<string>("");
-    const chatContainerRef = useRef<null | HTMLDivElement>(null);
-    const chatContainer = chatContainerRef.current;
 
     const sendChat = async () => {
         try {
@@ -71,20 +69,14 @@ const ChatRoom = () => {
         })();
     }, []);
 
-    useEffect(() => {
-        if (chatContainer && chat.length < 11) {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-    }, [chat]);
-
     const isFormValid = 0 < message.length;
 
     return (
         <div className={styles.container}>
             <h1>CHAT ROOM</h1>
             {chatPartnerName && <h2>{chatPartnerName}</h2>}
-            <div className={styles.chatContainer} ref={chatContainerRef} >
-                {userData && chat.length > 0 && chat.slice().reverse().map((item, index) => (
+            <div className={styles.chatContainer} >
+                {userData && chat.length > 0 && chat.map((item, index) => (
                     <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
                         {item.user.id !== userData.id &&
                             <Image width={20} height={20} alt="アイコン画像" src={item.user.iconImageUrl || "/icon/default_profile_icon.svg"} />
