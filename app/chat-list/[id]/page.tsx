@@ -10,6 +10,7 @@ import { chatRoomData } from '@/app/types/chatRoomData';
 import { formatDateJapanTime } from '@/app/utils/dateUtils/dateUtils';
 import { roomsFactory } from '@/app/models/rooms_model';
 import { AsyncButton } from '@/app/components/asyncButton';
+import { onScrollLoad } from '@/app/utils/scrollUtils/onScrollLoad';
 
 const ChatRoom = () => {
     const params = useParams();
@@ -20,7 +21,6 @@ const ChatRoom = () => {
     const userData = useRecoilValue(userDataState);
     const currentUserId = userData?.id;
     const chatContainerRef = useRef<null | HTMLDivElement>(null);
-    const chatContainer = chatContainerRef.current;
 
     const sendChat = async () => {
         try {
@@ -59,14 +59,6 @@ const ChatRoom = () => {
         }
     };
 
-    const onScroll = () => {
-        if (!chatContainer) return;
-        const rate = chatContainer.scrollTop / (chatContainer.scrollHeight - chatContainer.clientHeight);
-        if (rate < -0.9) {
-            loadPreviouseChat();
-        }
-    };
-
     useEffect(() => {
         (async () => {
             try {
@@ -101,7 +93,7 @@ const ChatRoom = () => {
         <div className={styles.container}>
             <h1>CHAT ROOM</h1>
             {chatPartnerName && <h2>{chatPartnerName}</h2>}
-            <div className={styles.chatContainer} ref={chatContainerRef} onScroll={onScroll}>
+            <div className={styles.chatContainer} ref={chatContainerRef} onScroll={()=>onScrollLoad(chatContainerRef, loadPreviouseChat)}>
                 {userData && chat.length > 0 && chat.map((item, index) => (
                     <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
                         {item.user.id !== userData.id &&

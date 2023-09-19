@@ -8,11 +8,13 @@ import { AsyncButton } from '../components/asyncButton';
 import { postFactory } from '../models/post_model';
 import { messageFactory } from '../models/message_model';
 import { formatDateJapanTime } from '../utils/dateUtils/dateUtils';
+import { onScrollLoad } from '../utils/scrollUtils/onScrollLoad';
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
   const [postList, setPostList] = useState<postData[]>([]);
-
+  const postListContainer = useRef<HTMLDivElement>(null);
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement>, postId: number) => {
     const newComments = { ...comments };
     newComments[postId] = e.target.value;
@@ -53,17 +55,6 @@ const PostList = () => {
     }
   };
 
-  const postListContainer = useRef<HTMLDivElement>(null);
-
-  const onScroll = () => {
-    const el = postListContainer.current;
-    if (!el) return;
-    const rate = el.scrollTop / (el.scrollHeight - el.clientHeight);
-    if (rate > 0.9 && el.scrollTop > 0) {
-      loadNextPostList();
-    }
-  };
-
   useEffect(() => {
     const paginationData = { size: 10, cursor: 0 };
     (async () => {
@@ -80,7 +71,7 @@ const PostList = () => {
     <div className={styles.container}>
       <h1>POST LIST</h1>
       <Link href={'../post'}>投稿を作成する</Link>
-      <div className={styles.postListContainer} ref={postListContainer} onScroll={onScroll}>
+      <div className={styles.postListContainer} ref={postListContainer} onScroll={()=>onScrollLoad(postListContainer, loadNextPostList)}>
         {postList.length > 0 && postList.map((post, index) => (
           <div key={index} className={styles.post}>
             <div className={styles.userInfo}>
