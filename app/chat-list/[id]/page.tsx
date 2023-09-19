@@ -10,7 +10,7 @@ import { chatRoomData } from '@/app/types/chatRoomData';
 import { formatDateJapanTime } from '@/app/utils/dateUtils/dateUtils';
 import { roomsFactory } from '@/app/models/rooms_model';
 import { AsyncButton } from '@/app/components/asyncButton';
-import { onScrollLoad } from '@/app/utils/scrollUtils/onScrollLoad';
+import { registerInfiniteScrollHandler } from '@/app/utils/scrollUtils/registerInfiniteScrollHandler';
 
 const ChatRoom = () => {
     const params = useParams();
@@ -93,7 +93,7 @@ const ChatRoom = () => {
         <div className={styles.container}>
             <h1>CHAT ROOM</h1>
             {chatPartnerName && <h2>{chatPartnerName}</h2>}
-            <div className={styles.chatContainer} ref={chatContainerRef} onScroll={()=>onScrollLoad(chatContainerRef, loadPreviouseChat)}>
+            <div className={styles.chatContainer} ref={chatContainerRef} onScroll={()=>registerInfiniteScrollHandler(chatContainerRef, loadPreviouseChat)}>
                 {userData && chat.length > 0 && chat.map((item, index) => (
                     <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
                         {item.user.id !== userData.id &&

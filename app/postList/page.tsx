@@ -8,7 +8,7 @@ import { AsyncButton } from '../components/asyncButton';
 import { postFactory } from '../models/post_model';
 import { messageFactory } from '../models/message_model';
 import { formatDateJapanTime } from '../utils/dateUtils/dateUtils';
-import { onScrollLoad } from '../utils/scrollUtils/onScrollLoad';
+import { registerInfiniteScrollHandler } from '../utils/scrollUtils/registerInfiniteScrollHandler';
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
@@ -71,7 +71,7 @@ const PostList = () => {
     <div className={styles.container}>
       <h1>POST LIST</h1>
       <Link href={'../post'}>投稿を作成する</Link>
-      <div className={styles.postListContainer} ref={postListContainer} onScroll={()=>onScrollLoad(postListContainer, loadNextPostList)}>
+      <div className={styles.postListContainer} ref={postListContainer} onScroll={()=>registerInfiniteScrollHandler(postListContainer, loadNextPostList)}>
         {postList.length > 0 && postList.map((post, index) => (
           <div key={index} className={styles.post}>
             <div className={styles.userInfo}>
