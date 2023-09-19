@@ -1,7 +1,9 @@
-import { voidFunction } from "@/app/types/function/voidFunction";
-import { scrollContainerRef } from "@/app/types/refs/scrollContainerRef";
+type ScrollContainerRef = {
+    current: HTMLDivElement | null;
+};
+type VoidFunction = () => Promise<void>;
 
-export const registerInfiniteScrollHandler = (container: scrollContainerRef, loadData: voidFunction): void => {
+export const registerInfiniteScrollHandler = (container: ScrollContainerRef, loadData: VoidFunction): void => {
     const el = container.current;
     if (!el) return;
     let rate = el.scrollTop / (el.scrollHeight - el.clientHeight);
