@@ -8,11 +8,13 @@ import { AsyncButton } from '../components/asyncButton';
 import { postFactory } from '../models/post_model';
 import { messageFactory } from '../models/message_model';
 import { formatDateJapanTime } from '../utils/dateUtils/dateUtils';
+import { registerInfiniteScrollHandler } from '../utils/scrollUtils/registerInfiniteScrollHandler';
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
   const [postList, setPostList] = useState<postData[]>([]);
-
+  const postListContainer = useRef<HTMLDivElement>(null);
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement>, postId: number) => {
     const newComments = { ...comments };
     newComments[postId] = e.target.value;
@@ -39,9 +41,9 @@ const PostList = () => {
 
   const loadNextPostList = async () => {
     const lastPostId = postList[postList.length - 1].id;
-    const query = { size: 10, cursor: lastPostId };
+    const paginationData = { size: 10, cursor: lastPostId };
     try {
-      const response = await postFactory().get(query);
+      const response = await postFactory().get(paginationData);
       if (response) {
         setPostList((prevPostList) => [
           ...prevPostList,
@@ -50,17 +52,6 @@ const PostList = () => {
       }
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const postListContainer = useRef<HTMLDivElement>(null);
-
-  const onScroll = () => {
-    const el = postListContainer.current;
-    if (!el) return;
-    const rate = el.scrollTop / (el.scrollHeight - el.clientHeight);
-    if (rate > 0.9 && el.scrollTop > 0) {
-      loadNextPostList();
     }
   };
 
@@ -80,7 +71,7 @@ const PostList = () => {
     <div className={styles.container}>
       <h1>POST LIST</h1>
       <Link href={'../post'}>投稿を作成する</Link>
-      <div className={styles.postListContainer} ref={postListContainer} onScroll={onScroll}>
+      <div className={styles.postListContainer} ref={postListContainer} onScroll={()=>registerInfiniteScrollHandler(postListContainer, loadNextPostList)}>
         {postList.length > 0 && postList.map((post, index) => (
           <div key={index} className={styles.post}>
             <div className={styles.userInfo}>

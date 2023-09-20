@@ -10,15 +10,17 @@ import { chatRoomData } from '@/app/types/chatRoomData';
 import { formatDateJapanTime } from '@/app/utils/dateUtils/dateUtils';
 import { roomsFactory } from '@/app/models/rooms_model';
 import { AsyncButton } from '@/app/components/asyncButton';
+import { registerInfiniteScrollHandler } from '@/app/utils/scrollUtils/registerInfiniteScrollHandler';
 
 const ChatRoom = () => {
     const params = useParams();
     const roomId = Array.isArray(params) ? params[0] : params.id;
     const [chat, setChat] = useState<chatRoomData[]>([]);
     const [chatPartnerName, setchatPartnerName] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
     const userData = useRecoilValue(userDataState);
     const currentUserId = userData?.id;
-    const [message, setMessage] = useState<string>("");
+    const chatContainerRef = useRef<null | HTMLDivElement>(null);
 
     const sendChat = async () => {
         try {
@@ -40,6 +42,22 @@ const ChatRoom = () => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value);
     }
+
+    const loadPreviouseChat = async () => {
+        const lastChatId = chat[chat.length - 1].id;
+        const paginationData = { size: 5, cursor: lastChatId };
+        try {
+            const response = await messageFactory().getChat(roomId, paginationData);
+            if (response && response.length > 0) {
+                setChat((prevChat) => [
+                    ...prevChat,
+                    ...response.filter((chat) => !prevChat.some((prevChat) => prevChat.id === chat.id)),
+                ]);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -75,7 +93,7 @@ const ChatRoom = () => {
         <div className={styles.container}>
             <h1>CHAT ROOM</h1>
             {chatPartnerName && <h2>{chatPartnerName}</h2>}
-            <div className={styles.chatContainer} >
+            <div className={styles.chatContainer} ref={chatContainerRef} onScroll={()=>registerInfiniteScrollHandler(chatContainerRef, loadPreviouseChat)}>
                 {userData && chat.length > 0 && chat.map((item, index) => (
                     <div key={index} className={item.user.id !== userData.id ? styles.left : styles.right}>
                         {item.user.id !== userData.id &&
