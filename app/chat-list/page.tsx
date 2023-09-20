@@ -2,14 +2,19 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import styles from './page.module.css';
-import { ChatData } from '../types/chatData';
+import { ChatData, RoomUser } from '../types/chatData';
 import { roomsFactory } from '../models/rooms_model';
 import { formatDateJapanTime } from '../utils/dateUtils/dateUtils';
 import { useRouter } from 'next/navigation';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../atom/state/userDataState';
+
 
 const ChatList = () => {
   const router = useRouter();
   const [chatList, setChatList] = useState<ChatData[]>([]);
+  const userData = useRecoilValue(userDataState);
+  const currentUserId = userData?.id;
 
   const moveChatRoom = async(chatId:string) => {
     router.push(`/chat-list/${chatId}`);
@@ -27,6 +32,15 @@ const ChatList = () => {
     })();
   }, []);
 
+  const getPartnerName = (users:RoomUser[]) => {
+    const chatPartner = users.find(user => user.userId !== currentUserId);
+    return chatPartner?.user.name;
+  }
+  const getPartnerIcon = (users:RoomUser[]) => {
+    const chatPartner = users.find(user => user.userId !== currentUserId);
+    return chatPartner?.user.iconImageUrl;
+  }
+
   return (
     <div className={styles.container}>
       <h1>CHAT LIST</h1>
@@ -34,8 +48,8 @@ const ChatList = () => {
         {chatList && chatList.length > 0 && chatList.map((chat, index) => (
           <div className={styles.chat} key={index} onClick={()=>moveChatRoom(chat.id)}>
             <div className={styles.chatUserInfo}>
-              <Image width={40} height={40} alt="プロフィールアイコン" src={chat?.roomUsers[0].user.iconImageUrl || "./icon/default_profile_icon.svg"} />
-              <div>{chat.roomUsers[0].user.name}</div>
+              <Image width={40} height={40} alt="プロフィールアイコン" src={getPartnerIcon(chat.roomUsers) || "./icon/default_profile_icon.svg"} />
+              <div>{ getPartnerName(chat.roomUsers) }</div>
             </div>
             <div className={styles.chatBody}>
               <div>{chat.messages[0].content.slice(0, 10)}</div>
