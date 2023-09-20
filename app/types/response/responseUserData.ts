@@ -1,8 +1,8 @@
-import { userData } from "../userData";
+import { UserData } from "../userData";
 
-export type responseUserData = {
+export type ResponseUserData = {
     data: {
-        user: userData;
+        user: UserData;
         token: string;
     }
 }

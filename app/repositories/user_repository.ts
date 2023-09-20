@@ -1,20 +1,20 @@
 import { apiRequest } from "../axios/axiosInstance";
-import { createAccountParams } from "../types/params/createAccountParams";
-import { editUserDataParams } from "../types/params/editUserDataParams";
-import { editUserIconParams } from "../types/params/editUserIconParams";
-import { loginAccountParams } from "../types/params/loginAccountParams";
-import { responseAccountData } from "../types/response/responseAccountData";
-import { responseUserData } from "../types/response/responseUserData";
+import { CreateAccountParams } from "../types/params/createAccountParams";
+import { EditUserDataParams } from "../types/params/editUserDataParams";
+import { EditUserIconParams } from "../types/params/editUserIconParams";
+import { LoginAccountParams } from "../types/params/loginAccountParams";
+import { ResponseAccountData } from "../types/response/responseAccountData";
+import { ResponseUserData } from "../types/response/responseUserData";
 
 export type UserRepository = {
-    loginAccount: (loginInfo : loginAccountParams) => Promise<responseUserData>;
-    createAccount: (accountInfo: createAccountParams) => Promise<responseAccountData>;
-    getUserData: () => Promise<responseUserData>;
-    editUserData: (editUserInfo: editUserDataParams) => Promise<void>;
-    editUserIcon: (editIconInfo: editUserIconParams) => Promise<void>;
+    loginAccount: (loginInfo : LoginAccountParams) => Promise<ResponseUserData>;
+    createAccount: (accountInfo: CreateAccountParams) => Promise<ResponseAccountData>;
+    getUserData: () => Promise<ResponseUserData>;
+    editUserData: (editUserInfo: EditUserDataParams) => Promise<void>;
+    editUserIcon: (editIconInfo: EditUserIconParams) => Promise<void>;
 }
 
-const loginAccount: UserRepository["loginAccount"] = async (loginInfo: loginAccountParams): Promise<responseUserData> => {
+const loginAccount: UserRepository["loginAccount"] = async (loginInfo: LoginAccountParams): Promise<ResponseUserData> => {
     const response = await apiRequest.post('/auth', {
         email: loginInfo.email,
         password: loginInfo.password
@@ -22,12 +22,12 @@ const loginAccount: UserRepository["loginAccount"] = async (loginInfo: loginAcco
     return response;
 }
 
-const getUserData: UserRepository["getUserData"] = async (): Promise<responseUserData> => {
+const getUserData: UserRepository["getUserData"] = async (): Promise<ResponseUserData> => {
     const response = await apiRequest.get('/account');
     return response;
 }
 
-const createAccount: UserRepository["createAccount"] = async (accountInfo: createAccountParams): Promise<responseAccountData> => {
+const createAccount: UserRepository["createAccount"] = async (accountInfo: CreateAccountParams): Promise<ResponseAccountData> => {
     const response = await apiRequest.post('/account', {
         name: accountInfo.name,
         email: accountInfo.email,
@@ -36,14 +36,14 @@ const createAccount: UserRepository["createAccount"] = async (accountInfo: creat
     return response.data;
 }
 
-const editUserData: UserRepository["editUserData"] = async (editUserInfo: editUserDataParams) => {
+const editUserData: UserRepository["editUserData"] = async (editUserInfo: EditUserDataParams) => {
     await apiRequest.patch('/account/profile', {
         name: editUserInfo.name,
         email: editUserInfo.email
     });
 }
 
-const editUserIcon: UserRepository["editUserIcon"] = async (editIconInfo: editUserIconParams) => {
+const editUserIcon: UserRepository["editUserIcon"] = async (editIconInfo: EditUserIconParams) => {
     await apiRequest.patch('/account/icon_image', editIconInfo.newIcon, {
         headers: {
             "content-type": "multipart/form-data"

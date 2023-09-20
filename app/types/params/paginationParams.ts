@@ -1,4 +1,4 @@
-export type paginationParams = {
+export type PaginationParams = {
     size: number,
     cursor: number | null
   }

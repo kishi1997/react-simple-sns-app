@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../atom/state/userDataState';
 import { useParams } from 'next/navigation';
 import { messageFactory } from '@/app/models/message_model';
-import { chatRoomData } from '@/app/types/chatRoomData';
+import { ChatRoomData } from '@/app/types/chatRoomData';
 import { formatDateJapanTime } from '@/app/utils/dateUtils/dateUtils';
 import { roomsFactory } from '@/app/models/rooms_model';
 import { AsyncButton } from '@/app/components/asyncButton';
@@ -15,7 +15,7 @@ import { registerInfiniteScrollHandler } from '@/app/utils/scrollUtils/registerI
 const ChatRoom = () => {
     const params = useParams();
     const roomId = Array.isArray(params) ? params[0] : params.id;
-    const [chat, setChat] = useState<chatRoomData[]>([]);
+    const [chat, setChat] = useState<ChatRoomData[]>([]);
     const [chatPartnerName, setchatPartnerName] = useState<string>("");
     const [message, setMessage] = useState<string>("");
     const userData = useRecoilValue(userDataState);

@@ -1,23 +1,23 @@
 import { apiRequest } from "../axios/axiosInstance";
-import { chatRoomData } from "../types/chatRoomData";
-import { commentDataParams } from "../types/params/commentDataParams";
-import { paginationParams } from "../types/params/paginationParams";
-import { sendChatDataParams } from "../types/params/sendChatDataParams";
+import { ChatRoomData } from "../types/chatRoomData";
+import { CommentDataParams } from "../types/params/commentDataParams";
+import { PaginationParams } from "../types/params/paginationParams";
+import { SendChatDataParams } from "../types/params/sendChatDataParams";
 
 export type MessageRepository = {
-    addComment: (commentData: commentDataParams) => Promise<void>;
-    getChat: (roomId: string, paginationData:paginationParams) => Promise<chatRoomData[]>;
-    sendChat: (sendChatData: sendChatDataParams) => Promise<chatRoomData>;
+    addComment: (commentData: CommentDataParams) => Promise<void>;
+    getChat: (roomId: string, paginationData:PaginationParams) => Promise<ChatRoomData[]>;
+    sendChat: (sendChatData: SendChatDataParams) => Promise<ChatRoomData>;
 }
 
-const addComment : MessageRepository["addComment"] = async(commentData: commentDataParams) => {
+const addComment : MessageRepository["addComment"] = async(commentData: CommentDataParams) => {
     await apiRequest.post('/messages/via_post', {
       content: commentData.comments[commentData.postId],
       postId: commentData.postId
     })
 }
 
-const getChat : MessageRepository["getChat"] = async(roomId: string, paginationData:paginationParams):Promise<chatRoomData[]> => {
+const getChat : MessageRepository["getChat"] = async(roomId: string, paginationData:PaginationParams):Promise<ChatRoomData[]> => {
     const response = await apiRequest.get(`/messages/?roomId=${roomId}`, {
         params: {
             Pagination: {
@@ -29,7 +29,7 @@ const getChat : MessageRepository["getChat"] = async(roomId: string, paginationD
     return response.data.messages;
 }
 
-const sendChat : MessageRepository["sendChat"] = async(sendChatData : sendChatDataParams):Promise<chatRoomData> => {
+const sendChat : MessageRepository["sendChat"] = async(sendChatData : SendChatDataParams):Promise<ChatRoomData> => {
     const response = await apiRequest.post('/messages/',{
         content:sendChatData.content,
         roomId:sendChatData.roomId
