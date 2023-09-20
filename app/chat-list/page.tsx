@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import styles from './page.module.css';
-import { chatData } from '../types/chatData';
+import { ChatData } from '../types/chatData';
 import { roomsFactory } from '../models/rooms_model';
 import { formatDateJapanTime } from '../utils/dateUtils/dateUtils';
 import { useRouter } from 'next/navigation';
 
 const ChatList = () => {
   const router = useRouter();
-  const [chatList, setChatList] = useState<chatData[]>([]);
+  const [chatList, setChatList] = useState<ChatData[]>([]);
 
   const moveChatRoom = async(chatId:string) => {
     router.push(`/chat-list/${chatId}`);

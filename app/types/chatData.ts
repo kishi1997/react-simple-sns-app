@@ -1,16 +1,16 @@
-import { userData } from "./userData";
+import { UserData } from "./userData";
 
-type message = {
+type Message = {
   content: string;
   createdAt: string;
 }
-type roomUser = {
+type RoomUser = {
   roomId: string;
-  user: userData;
+  user: UserData;
 }
 
-export type chatData = {
+export type ChatData = {
   id: string;
-  messages: message[];
-  roomUsers: roomUser[];
+  messages: Message[];
+  roomUsers: RoomUser[];
 }

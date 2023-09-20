@@ -1,9 +1,9 @@
-import { userData } from "./userData";
+import { UserData } from "./userData";
 
-export type postData = {
+export type PostData = {
     body: string,
     createdAt: string,
     id: number,
     userId: number,
-    user: userData;
+    user: UserData;
   }

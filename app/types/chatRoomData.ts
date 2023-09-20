@@ -1,10 +1,10 @@
-import { userData } from "./userData";
+import { UserData } from "./userData";
 
-export type chatRoomData = {
+export type ChatRoomData = {
   id: number;
   content: string;
   createdAt: string;
-  user: userData;
+  user: UserData;
   post: {
       body: string;
   }

@@ -3,7 +3,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { postData } from '../types/postData';
+import { PostData } from '../types/postData';
 import { AsyncButton } from '../components/asyncButton';
 import { postFactory } from '../models/post_model';
 import { messageFactory } from '../models/message_model';
@@ -12,7 +12,7 @@ import { registerInfiniteScrollHandler } from '../utils/scrollUtils/registerInfi
 
 const PostList = () => {
   const [comments, setComments] = useState<{ [key: string]: string }>({});
-  const [postList, setPostList] = useState<postData[]>([]);
+  const [postList, setPostList] = useState<PostData[]>([]);
   const postListContainer = useRef<HTMLDivElement>(null);
   
   const handleChange = (e: ChangeEvent<HTMLInputElement>, postId: number) => {

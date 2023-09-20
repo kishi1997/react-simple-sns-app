@@ -1,6 +1,6 @@
 import { UserData } from "../userData";
 
-export type ResponseAccountData = {
-    token: string;
+export type ResponseRoomUserData = {
     user: UserData;
-}
+    userId: number;
+};

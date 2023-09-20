@@ -1,3 +1,3 @@
-export type editUserIconParams = {
+export type EditUserIconParams = {
   newIcon: FormData;
 }

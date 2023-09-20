@@ -1,17 +1,17 @@
 import { apiRequest } from "../axios/axiosInstance";
-import { chatData } from "../types/chatData";
-import { roomUser } from "../types/response/responseRoomData";
+import { ChatData } from "../types/chatData";
+import { ResponseRoomUserData } from "../types/response/responseRoomUserData";
 
 export type RoomsRepository = {
- getChatList:() => Promise<chatData[]>;
- getRoomData:(roomId: string) => Promise<roomUser[]>;
+ getChatList:() => Promise<ChatData[]>;
+ getRoomData:(roomId: string) => Promise<ResponseRoomUserData[]>;
 }
 
-const getChatList:RoomsRepository["getChatList"] = async():Promise<chatData[]> => {
+const getChatList:RoomsRepository["getChatList"] = async():Promise<ChatData[]> => {
     const response = await apiRequest.get('/rooms');
     return response.data.rooms;
 }
-const getRoomData:RoomsRepository["getRoomData"] = async(roomId: string):Promise<roomUser[]> => {
+const getRoomData:RoomsRepository["getRoomData"] = async(roomId: string):Promise<ResponseRoomUserData[]> => {
     const response = await apiRequest.get(`/rooms/${roomId}`);
     return response.data.room.roomUsers;
 }
