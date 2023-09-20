@@ -3,7 +3,6 @@ const nextConfig = {}
 
 module.exports = {
     images: {
-        domains: ['localhost'],
-        domains: ['storage.googleapis.com']
+        domains: ['localhost','storage.googleapis.com']
     },
 };

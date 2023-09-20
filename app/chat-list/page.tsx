@@ -32,13 +32,12 @@ const ChatList = () => {
     })();
   }, []);
 
-  const getPartnerName = (users:RoomUser[]) => {
+  const getPartnerInfo = (users:RoomUser[]) => {
     const chatPartner = users.find(user => user.userId !== currentUserId);
-    return chatPartner?.user.name;
-  }
-  const getPartnerIcon = (users:RoomUser[]) => {
-    const chatPartner = users.find(user => user.userId !== currentUserId);
-    return chatPartner?.user.iconImageUrl;
+    return {
+      name: chatPartner?.user.name,
+      icon: chatPartner?.user.iconImageUrl
+    };
   }
 
   return (
@@ -48,8 +47,8 @@ const ChatList = () => {
         {chatList && chatList.length > 0 && chatList.map((chat, index) => (
           <div className={styles.chat} key={index} onClick={()=>moveChatRoom(chat.id)}>
             <div className={styles.chatUserInfo}>
-              <Image width={40} height={40} alt="プロフィールアイコン" src={getPartnerIcon(chat.roomUsers) || "./icon/default_profile_icon.svg"} />
-              <div>{ getPartnerName(chat.roomUsers) }</div>
+              <Image width={40} height={40} alt="プロフィールアイコン" src={getPartnerInfo(chat.roomUsers).icon || "./icon/default_profile_icon.svg"} />
+              <div>{ getPartnerInfo(chat.roomUsers).name }</div>
             </div>
             <div className={styles.chatBody}>
               <div>{chat.messages[0].content.slice(0, 10)}</div>
