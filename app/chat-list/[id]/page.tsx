@@ -72,7 +72,7 @@ const ChatRoom = () => {
                 console.error(error);
             }
         })();
-    }, []);
+    }, [userData]);
 
     useEffect(() => {
         const paginationData = { size: 10, cursor: null };
