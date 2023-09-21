@@ -21,7 +21,7 @@ const Post = () => {
     try {
       await postFactory().post(postContent);
       setFlashMessage("投稿が完了しました。");
-      router.push('../postList');
+      router.push('../post-list');
     }
     catch (error: any) {
       setError(error.message);
