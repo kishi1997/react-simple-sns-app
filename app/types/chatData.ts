@@ -4,9 +4,10 @@ type Message = {
   content: string;
   createdAt: string;
 }
-type RoomUser = {
+export type RoomUser = {
   roomId: string;
   user: UserData;
+  userId: number
 }
 
 export type ChatData = {
